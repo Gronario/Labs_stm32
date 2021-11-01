@@ -91,13 +91,64 @@ int main(void)
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+
+//#define DELAY 500
+//#define BLINK_CYCLES_QUANTITY 2
+//
+//
+//
+//  void all_led(){
+//	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_SET);
+//	  HAL_Delay(DELAY);
+//	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+//	  HAL_Delay(DELAY);
+//  }
+//
+//  void cross_blink(uint16_t *array,uint16_t array_len){
+//	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+//		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+//		  HAL_Delay(DELAY);
+//		  for(uint16_t j=0;j<array_len;j++){
+//			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+//			  HAL_Delay(DELAY);
+//		  }
+//	  }
+//  }
+//
+//  	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
+//
+//
+//  void pair_blink(uint16_t *array, uint16_t array_len){
+//  	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+//  		  for (uint16_t j=0; j<array_len; j++){
+//  			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+//  			  HAL_Delay(DELAY);
+//  			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
+//  		}
+//  	  }
+//    }
+//  	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
+
+
   while (1)
   {
-	  if (HAL_GPIO_ReadPin(GPIOA, GPIO_PIN_15) == GPIO_PIN_SET){
-		  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_RESET);
+	  if (HAL_GPIO_ReadPin(GPIOA, But2_Pin) == GPIO_PIN_SET){
+		  HAL_GPIO_WritePin(GPIOD,LED1_Pin,GPIO_PIN_RESET);
 	  }
 	  else
-		  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_12,GPIO_PIN_SET);
+		  HAL_GPIO_WritePin(GPIOD,LED1_Pin,GPIO_PIN_SET);
+//	  if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_11) == GPIO_PIN_SET){
+//		  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_13,GPIO_PIN_RESET);
+//	  }
+//	  else
+//		  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_13,GPIO_PIN_SET);
+
+//	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]));
+//	  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]));
+//	  all_led(DELAY);
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -159,33 +210,36 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(LED1_GPIO_Port, LED1_Pin, GPIO_PIN_SET);
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, LED2_Pin|LED3_Pin|LED4_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pins : PD12 PD14 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12|GPIO_PIN_14;
+  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin LED4_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : INT_BTN_Pin */
-  GPIO_InitStruct.Pin = INT_BTN_Pin;
+  /*Configure GPIO pins : But4_Pin But5_Pin But3_Pin But1_Pin */
+  GPIO_InitStruct.Pin = But4_Pin|But5_Pin|But3_Pin|But1_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(INT_BTN_GPIO_Port, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_15;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pin : But2_Pin */
+  GPIO_InitStruct.Pin = But2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(But2_GPIO_Port, &GPIO_InitStruct);
 
   /* EXTI interrupt init*/
   HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
   HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 

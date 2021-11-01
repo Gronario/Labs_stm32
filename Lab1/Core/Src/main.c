@@ -116,16 +116,19 @@ int main(void)
 			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
 			  HAL_Delay(DELAY);
 
-
 		  }
 	  }
   }
 
   	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
 
+
   void pair_blink(uint16_t *array, uint16_t array_len){
+
   	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+
   		  for (uint16_t j=0; j<array_len; j++){
+
   			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
   			  HAL_Delay(DELAY);
   			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
