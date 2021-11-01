@@ -3921,3 +3921,93 @@
 2021-11-01 11:53:37,295 [INFO] IPUIPlugin:74 - create IPUIPlugin
 2021-11-01 11:53:37,311 [INFO] ApiDbMcu:468 - Load IP Config File for PDM2PCM
 2021-11-01 11:53:37,326 [INFO] OpenFileManager:333 - Restore cursor
+2021-11-01 12:08:15,087 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:08:19,445 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,2,27,587x401,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:19:29,766 [INFO] Pin:2088 - value.trim() Ç
+2021-11-01 12:19:29,766 [INFO] Pin:2089 - Pin value PA15
+2021-11-01 12:20:51,347 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 377317536 Bytes (682622976)
+2021-11-01 12:20:52,596 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 419260576 Bytes (682622976)
+2021-11-01 12:20:54,643 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 275605664 Bytes (682622976)
+2021-11-01 12:20:55,294 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: SYS
+2021-11-01 12:20:55,294 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: RCC
+2021-11-01 12:20:55,294 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: NVIC
+2021-11-01 12:20:55,294 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: GPIO
+2021-11-01 12:20:55,294 [INFO] CodeGenerator:663 - code generatio: config db path: C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.3.0.202107141111\\db\
+2021-11-01 12:20:55,841 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\license.tmp_save
+2021-11-01 12:20:56,534 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\license.tmp
+2021-11-01 12:20:56,622 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\gpio.tmp_save
+2021-11-01 12:20:56,966 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\gpio.tmp
+2021-11-01 12:20:57,044 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_it.c_save
+2021-11-01 12:20:57,231 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_it.c
+2021-11-01 12:20:57,247 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_it.h_save
+2021-11-01 12:20:57,356 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_it.h
+2021-11-01 12:20:57,387 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_hal_msp.c_save
+2021-11-01 12:20:57,528 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_hal_msp.c
+2021-11-01 12:20:57,544 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\system.tmp_save
+2021-11-01 12:20:57,622 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\system.tmp
+2021-11-01 12:20:57,653 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_hal_conf.h_save
+2021-11-01 12:20:57,778 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_hal_conf.h
+2021-11-01 12:20:57,887 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\main.h_save
+2021-11-01 12:20:58,012 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\main.h
+2021-11-01 12:20:58,043 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\main.c_save
+2021-11-01 12:20:58,262 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\main.c
+2021-11-01 12:20:59,934 [INFO] ProjectBuilder:2578 - Time for Copy HAL[1] : 438mS.
+2021-11-01 12:20:59,934 [INFO] ProjectBuilder:3622 - Project Generator version: 3.14.1
+2021-11-01 12:21:00,684 [INFO] ConfigFileManager:1271 - The Die is : DIE413
+2021-11-01 12:21:00,715 [INFO] ApiDbMcu:468 - Load IP Config File for FATFS
+2021-11-01 12:21:00,762 [INFO] ApiDbMcu:468 - Load IP Config File for FREERTOS
+2021-11-01 12:21:00,777 [INFO] ApiDbMcu:468 - Load IP Config File for LIBJPEG
+2021-11-01 12:21:00,902 [INFO] ApiDbMcu:468 - Load IP Config File for LWIP
+2021-11-01 12:21:00,965 [INFO] ApiDbMcu:468 - Load IP Config File for MBEDTLS
+2021-11-01 12:21:01,058 [INFO] ApiDbMcu:468 - Load IP Config File for USB_DEVICE
+2021-11-01 12:21:01,090 [INFO] ApiDbMcu:468 - Load IP Config File for USB_HOST
+2021-11-01 12:21:05,557 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 5623mS.
+2021-11-01 12:21:05,557 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2021-11-01 12:21:05,557 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2021-11-01 12:36:50,759 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:36:50,821 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:36:55,025 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:36:55,056 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:38:52,633 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:38:52,665 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:39:05,074 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:39:05,121 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:39:13,976 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:39:14,022 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:39:20,411 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:39:20,443 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:39:30,159 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:39:30,222 [INFO] NvicIntPanel:96 - NVIC parent = com.st.microxplorer.plugins.ip.nvic.MultiNvicIntPanel[,0,0,0x0,invalid,layout=javax.swing.BoxLayout,alignmentX=0.0,alignmentY=0.0,border=,flags=9,maximumSize=,minimumSize=,preferredSize=]
+2021-11-01 12:41:26,221 [INFO] Gpio:254 - dependency for GPIO []
+2021-11-01 12:42:28,276 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 491454576 Bytes (829423616)
+2021-11-01 12:42:29,323 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 522314776 Bytes (829423616)
+2021-11-01 12:42:31,650 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 604670584 Bytes (829423616)
+2021-11-01 12:42:32,228 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: SYS
+2021-11-01 12:42:32,228 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: RCC
+2021-11-01 12:42:32,228 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: NVIC
+2021-11-01 12:42:32,228 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: GPIO
+2021-11-01 12:42:32,228 [INFO] CodeGenerator:663 - code generatio: config db path: C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.3.0.202107141111\\db\
+2021-11-01 12:42:32,697 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\license.tmp_save
+2021-11-01 12:42:32,775 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\license.tmp
+2021-11-01 12:42:32,822 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\gpio.tmp_save
+2021-11-01 12:42:32,916 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\gpio.tmp
+2021-11-01 12:42:32,978 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_it.c_save
+2021-11-01 12:42:33,103 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_it.c
+2021-11-01 12:42:33,134 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_it.h_save
+2021-11-01 12:42:33,228 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_it.h
+2021-11-01 12:42:33,259 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_hal_msp.c_save
+2021-11-01 12:42:33,384 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_hal_msp.c
+2021-11-01 12:42:33,384 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\system.tmp_save
+2021-11-01 12:42:33,478 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\system.tmp
+2021-11-01 12:42:33,494 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_hal_conf.h_save
+2021-11-01 12:42:33,634 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_hal_conf.h
+2021-11-01 12:42:33,712 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\main.h_save
+2021-11-01 12:42:33,822 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\main.h
+2021-11-01 12:42:33,837 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\main.c_save
+2021-11-01 12:42:34,212 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\main.c
+2021-11-01 12:42:35,399 [INFO] ProjectBuilder:2578 - Time for Copy HAL[1] : 218mS.
+2021-11-01 12:42:35,415 [INFO] ProjectBuilder:3622 - Project Generator version: 3.14.1
+2021-11-01 12:42:36,337 [INFO] ConfigFileManager:1271 - The Die is : DIE413
+2021-11-01 12:42:39,164 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 3749mS.
+2021-11-01 12:42:39,164 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2021-11-01 12:42:39,180 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
