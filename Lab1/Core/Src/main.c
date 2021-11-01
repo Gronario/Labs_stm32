@@ -95,55 +95,53 @@ int main(void)
 #define DELAY 500
 #define BLINK_CYCLES_QUANTITY 2
 
-  void all_led_on(uint32_t delay_time){
+
+
+  void all_led(){
 	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_SET);
-	  HAL_Delay(delay_time);
+	  HAL_Delay(DELAY);
 	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+	  HAL_Delay(DELAY);
   }
 
-  void all_led_off(uint32_t delay_time){
-	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
-	  HAL_Delay(delay_time);
-  }
+  void cross_blink(uint16_t *array,uint16_t array_len){
 
-  void cross_blink(uint32_t delay_time,uint32_t blink_cycles_quantity){
+	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
 
-	  for (uint32_t i=0; i<blink_cycles_quantity; i++){
-
-		  HAL_GPIO_WritePin(GPIOD,LED1_Pin,GPIO_PIN_SET);
-		  HAL_Delay(delay_time);
-		  HAL_GPIO_WritePin(GPIOD,LED3_Pin,GPIO_PIN_SET);
-		  HAL_Delay(delay_time);
-		  HAL_GPIO_WritePin(GPIOD,LED2_Pin,GPIO_PIN_SET);
-		  HAL_Delay(delay_time);
-		  HAL_GPIO_WritePin(GPIOD,LED4_Pin,GPIO_PIN_SET);
-		  HAL_Delay(delay_time);
 		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
-		  HAL_Delay(delay_time);
+		  HAL_Delay(DELAY);
+
+		  for(uint16_t j=0;j<array_len;j++){
+
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+			  HAL_Delay(DELAY);
+
+
+		  }
 	  }
   }
 
-  void pair_blink(uint32_t delay_time,uint32_t blink_cycles_quantity){
+  	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
 
-	  for (uint32_t i=0; i<blink_cycles_quantity; i++){
+  void pair_blink(uint16_t *array, uint16_t array_len){
+  	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+  		  for (uint16_t j=0; j<array_len; j++){
+  			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+  			  HAL_Delay(DELAY);
+  			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
+  		  }
+  	  }
+    }
+  	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
 
-		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED3_Pin,GPIO_PIN_SET);
-		  HAL_Delay(delay_time);
-		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED3_Pin,GPIO_PIN_RESET);
 
-		  HAL_GPIO_WritePin(GPIOD,LED2_Pin|LED4_Pin,GPIO_PIN_SET);
-		  HAL_Delay(delay_time);
-		  HAL_GPIO_WritePin(GPIOD,LED2_Pin|LED4_Pin,GPIO_PIN_RESET);
-
-	  }
-  }
 
   while (1)
   {
-	  pair_blink(DELAY,BLINK_CYCLES_QUANTITY);
-	  cross_blink(DELAY,BLINK_CYCLES_QUANTITY);
-	  all_led_on(DELAY);
-	  all_led_off(DELAY);
+	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]));
+	  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]));
+	  all_led(DELAY);
+
 
 
     /* USER CODE END WHILE */
