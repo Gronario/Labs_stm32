@@ -69,7 +69,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 				  break;
 
 	    	  case But2_Pin:
-	    		  counter=-1;
+	    		  counter-=1;
 				  break;
 
 	    	  case But3_Pin:
