@@ -55,6 +55,53 @@ static void MX_GPIO_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+#define BLINK_CYCLES_QUANTITY 1
+
+uint16_t delay = 500;
+uint8_t pair_blink_start = 0;
+uint8_t cross_blink_start = 0;
+uint8_t stop = 0;
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+
+	    	  switch(GPIO_Pin){
+
+	    	  case But1_Pin:
+				  cross_blink_start=!cross_blink_start;
+				  break;
+
+	    	  case But2_Pin:
+	    		  stop=!stop;
+				  break;
+
+	    	  case But3_Pin:
+	    		  pair_blink_start=!pair_blink_start;
+				  break;
+
+	    	  case But4_Pin:
+	    		  if (delay>100){
+	    			  delay-=100;
+	    		  }
+
+	    		  else if (delay<=100){
+	    			  delay-=10;
+	    		  }
+	    		  else if (delay<=10){
+	    			  __NOP(); //maximum blinking frequency
+	    		  }
+	    		  break;
+
+	    	  case But5_Pin:
+	    		  delay+=250;
+	    		  break;
+
+
+	    	  default:
+	    		  __NOP();
+	    		  break;
+	    	  }
+	    }
+
 /* USER CODE END 0 */
 
 /**
@@ -87,12 +134,63 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
+
+
+
+  void pair_blink(uint16_t *array, uint16_t array_len,uint16_t delay){
+	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+		  for (uint16_t j=0; j<array_len; j++){
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+			  HAL_Delay(delay);
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
+		}
+	  }
+ }
+	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
+
+
+  void all_led(delay){
+
+	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+	  HAL_Delay(delay);
+  }
+
+  void cross_blink(uint16_t *array,uint16_t array_len,uint16_t delay){
+	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+		  for(uint16_t j=0;j<array_len;j++){
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+			  HAL_Delay(delay);
+		  }
+		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+		  HAL_Delay(delay);
+	  }
+  }
+
+  	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
   while (1)
   {
+	  if(pair_blink_start){
+		  	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]),delay);
+	  }
+
+	  if(cross_blink_start){
+		  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]),delay);
+	  }
+
+	  if(stop){
+		  all_led(delay);
+	  }
+
+
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -150,27 +248,42 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_12, GPIO_PIN_SET);
+  HAL_GPIO_WritePin(GPIOD, LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PD12 */
-  GPIO_InitStruct.Pin = GPIO_PIN_12;
+  /*Configure GPIO pins : LED1_Pin LED2_Pin LED3_Pin LED4_Pin */
+  GPIO_InitStruct.Pin = LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
-  /*Configure GPIO pin : PA15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_15;
-  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  /*Configure GPIO pins : But4_Pin But5_Pin But3_Pin But1_Pin */
+  GPIO_InitStruct.Pin = But4_Pin|But5_Pin|But3_Pin|But1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : But2_Pin */
+  GPIO_InitStruct.Pin = But2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(But2_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 
 /* USER CODE BEGIN 4 */
+
 
 /* USER CODE END 4 */
 

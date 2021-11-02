@@ -4011,3 +4011,39 @@
 2021-11-01 12:42:39,164 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 3749mS.
 2021-11-01 12:42:39,164 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
 2021-11-01 12:42:39,180 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2021-11-01 15:45:01,615 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 648149280 Bytes (888143872)
+2021-11-01 15:45:02,943 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 358353328 Bytes (888143872)
+2021-11-01 15:45:05,012 [INFO] UtilMem:74 - End SaveConfig() Used Memory: 445907376 Bytes (888143872)
+2021-11-01 15:45:05,671 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: SYS
+2021-11-01 15:45:05,671 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: RCC
+2021-11-01 15:45:05,671 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: NVIC
+2021-11-01 15:45:05,671 [INFO] BlockDiagram:2740 - set Specific Code input for plugin: GPIO
+2021-11-01 15:45:05,687 [INFO] CodeGenerator:663 - code generatio: config db path: C:\ST\STM32CubeIDE_1.7.0\STM32CubeIDE\plugins\com.st.stm32cube.common.mx_6.3.0.202107141111\\db\
+2021-11-01 15:45:06,376 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\license.tmp_save
+2021-11-01 15:45:06,623 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\license.tmp
+2021-11-01 15:45:06,718 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\gpio.tmp_save
+2021-11-01 15:45:06,828 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\gpio.tmp
+2021-11-01 15:45:06,906 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_it.c_save
+2021-11-01 15:45:07,047 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_it.c
+2021-11-01 15:45:07,077 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_it.h_save
+2021-11-01 15:45:07,193 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_it.h
+2021-11-01 15:45:07,223 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_hal_msp.c_save
+2021-11-01 15:45:07,393 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\stm32f4xx_hal_msp.c
+2021-11-01 15:45:07,401 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\system.tmp_save
+2021-11-01 15:45:07,516 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\MXTmpFiles\system.tmp
+2021-11-01 15:45:07,558 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_hal_conf.h_save
+2021-11-01 15:45:07,739 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\stm32f4xx_hal_conf.h
+2021-11-01 15:45:08,036 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\main.h_save
+2021-11-01 15:45:08,145 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Inc\main.h
+2021-11-01 15:45:08,161 [INFO] CodeEngine:239 - oldGeneratedFile, C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\main.c_save
+2021-11-01 15:45:08,404 [INFO] CodeEngine:257 - Generated code: C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\Core\Src\main.c
+2021-11-01 15:45:09,750 [INFO] ProjectBuilder:2578 - Time for Copy HAL[1] : 265mS.
+2021-11-01 15:45:09,750 [INFO] ProjectBuilder:3622 - Project Generator version: 3.14.1
+2021-11-01 15:45:10,737 [INFO] ConfigFileManager:1271 - The Die is : DIE413
+2021-11-01 15:45:13,938 [INFO] ProjectBuilder:3789 - Time for Generating toolchain IDE Files: 4188mS.
+2021-11-01 15:45:13,939 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 1mS.
+2021-11-01 15:45:13,942 [INFO] ProjectBuilder:2457 - Time for Copy CMSIS : 0mS.
+2021-11-02 17:39:52,179 [INFO] Activator:177 - 
+
+
+2021-11-02 17:39:52,179 [INFO] Activator:178 - !SESSION log4j initialized

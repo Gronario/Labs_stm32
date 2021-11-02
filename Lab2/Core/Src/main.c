@@ -55,6 +55,54 @@ static void MX_GPIO_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+#define BLINK_CYCLES_QUANTITY 1
+
+uint16_t delay = 500;
+uint8_t pair_blink_start = 0;
+uint8_t cross_blink_start = 0;
+
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
+
+	    	  switch(GPIO_Pin){
+
+	    	  case But1_Pin:
+				  cross_blink_start=!cross_blink_start;
+				  break;
+
+	    	  case But2_Pin:
+	    		  cross_blink_start=0;
+	    		  cross_blink_start=0;
+				  break;
+
+	    	  case But3_Pin:
+	    		  pair_blink_start=!pair_blink_start;
+				  break;
+
+	    	  case But4_Pin:
+	    		  if (delay>100){
+	    			  delay-=100;
+	    		  }
+
+	    		  else if (delay<=100){
+	    			  delay-=10;
+	    		  }
+	    		  else if (delay<=10){
+	    			  __NOP(); //maximum blinking frequency
+	    		  }
+	    		  break;
+
+	    	  case But5_Pin:
+	    		  delay+=250;
+	    		  break;
+
+
+	    	  default:
+	    		  __NOP();
+	    		  break;
+	    	  }
+	    }
+
 /* USER CODE END 0 */
 
 /**
@@ -88,80 +136,32 @@ int main(void)
   /* USER CODE BEGIN 2 */
 
 
-
-
-
-#define DELAY 500
-#define BLINK_CYCLES_QUANTITY 2
-
-
-
-
-  void all_led(){
-	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_SET);
-	  HAL_Delay(DELAY);
-	  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
-	  HAL_Delay(DELAY);
-  }
-
-  void cross_blink(uint16_t *array,uint16_t array_len){
+  void pair_blink(uint16_t *array, uint16_t array_len,uint16_t delay){
 	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
-		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
-		  HAL_Delay(DELAY);
+		  for (uint16_t j=0; j<array_len; j++){
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+			  HAL_Delay(delay);
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
+		}
+	  }
+ }
+	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
+
+
+  void cross_blink(uint16_t *array,uint16_t array_len,uint16_t delay){
+	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
 		  for(uint16_t j=0;j<array_len;j++){
 			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
-			  HAL_Delay(DELAY);
+			  HAL_Delay(delay);
 		  }
+		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+		  HAL_Delay(delay);
 	  }
   }
 
   	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
 
 
-   void pair_blink(uint16_t *array, uint16_t array_len){
-	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
-		  for (uint16_t j=0; j<array_len; j++){
-			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
-			  HAL_Delay(DELAY);
-			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
-		}
-	  }
-  }
-	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
-
-
-	  uint16_t ledAnimationMode = 0;
-
-	  void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
-
-	    	  switch(GPIO_Pin){
-
-	    	  case But1_Pin:
-	    	  	  ledAnimationMode =!ledAnimationMode;
-	    		  break;
-	  //
-	  //  	  case But2_Pin:
-	  //  		  __NOP();
-	  //  		  break;
-	  //
-	  //  	  case But3_Pin:
-	  //
-	  //  		  break;
-
-	    	  case But4_Pin:
-	    		  HAL_GPIO_TogglePin(GPIOD,LED3_Pin);
-	    		  break;
-
-	    	  case But5_Pin:
-	    		  HAL_GPIO_TogglePin(GPIOD,LED4_Pin);
-	    		  break;
-
-
-	    	  default:
-	    		  __NOP();
-	    		  break;
-	    	  }
-	    }
 
   /* USER CODE END 2 */
 
@@ -170,12 +170,13 @@ int main(void)
 
   while (1)
   {
-	  if(ledAnimationMode){
-		  	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]));
+	  if(pair_blink_start){
+		  	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]),delay);
 	  }
-//	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]));
-//	  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]));
-//	  all_led();
+
+	  if(cross_blink_start){
+		  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]),delay);
+	  }
 
 
     /* USER CODE END WHILE */
