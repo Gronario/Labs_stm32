@@ -71,7 +71,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 				  break;
 
 	    	  case But2_Pin:
-	    		  pair_blink_start=0;
+	    		  cross_blink_start=0;
 	    		  cross_blink_start=0;
 				  break;
 

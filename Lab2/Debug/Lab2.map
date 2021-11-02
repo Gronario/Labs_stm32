@@ -2687,16 +2687,16 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_macro   0x000000000001ea48      0x1b6 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
  .debug_macro   0x000000000001ebfe      0x1d4 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
 
-.debug_line     0x0000000000000000     0x4b15
- .debug_line    0x0000000000000000      0x86a ./Core/Src/main.o
- .debug_line    0x000000000000086a      0x67e ./Core/Src/stm32f4xx_hal_msp.o
- .debug_line    0x0000000000000ee8      0x773 ./Core/Src/stm32f4xx_it.o
- .debug_line    0x000000000000165b      0x6ff ./Core/Src/system_stm32f4xx.o
- .debug_line    0x0000000000001d5a       0x88 ./Core/Startup/startup_stm32f407vgtx.o
- .debug_line    0x0000000000001de2      0x965 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
- .debug_line    0x0000000000002747      0xc14 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
- .debug_line    0x000000000000335b      0xadb ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
- .debug_line    0x0000000000003e36      0xcdf ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
+.debug_line     0x0000000000000000     0x4b17
+ .debug_line    0x0000000000000000      0x86c ./Core/Src/main.o
+ .debug_line    0x000000000000086c      0x67e ./Core/Src/stm32f4xx_hal_msp.o
+ .debug_line    0x0000000000000eea      0x773 ./Core/Src/stm32f4xx_it.o
+ .debug_line    0x000000000000165d      0x6ff ./Core/Src/system_stm32f4xx.o
+ .debug_line    0x0000000000001d5c       0x88 ./Core/Startup/startup_stm32f407vgtx.o
+ .debug_line    0x0000000000001de4      0x965 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
+ .debug_line    0x0000000000002749      0xc14 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
+ .debug_line    0x000000000000335d      0xadb ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
+ .debug_line    0x0000000000003e38      0xcdf ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
 
 .debug_str      0x0000000000000000    0xbbfa0
  .debug_str     0x0000000000000000    0xbb0db ./Core/Src/main.o
