@@ -69,7 +69,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 				  break;
 
 	    	  case But2_Pin:
-	    		  counter=-1;
+	    		  counter=0;
 				  break;
 
 	    	  case But3_Pin:
@@ -166,6 +166,8 @@ int main(void)
   				  HAL_Delay(delay);
   				  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
   			  }
+//  			  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+//  			  HAL_Delay(delay);
   		  }
   	  }
 
@@ -184,11 +186,11 @@ int main(void)
 		  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]),delay);
 	  }
 
-	  if (counter%3==2){
+	  else if (counter%3==2){
 		  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]),delay);
 	  }
 
-	  if (counter%3==0){
+	  else if (counter%3==0){
 			 diagonal_cross_blink(pins_diagonal_cross_blink,sizeof(pins_diagonal_cross_blink)/sizeof(pins_diagonal_cross_blink[0]),delay);
 	  }
 

@@ -5365,3 +5365,206 @@ Finished building: Lab2.bin
 Finished building: Lab2.list
  
  
+19:33:16 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:163:15: warning: unused variable 'pins_cross_blink' [-Wunused-variable]
+  163 |      uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
+      |               ^~~~~~~~~~~~~~~~
+At top level:
+../Core/Src/main.c:152:8: warning: 'cross_blink' defined but not used [-Wunused-function]
+  152 |   void cross_blink(uint16_t *array,uint16_t array_len,uint16_t delay){
+      |        ^~~~~~~~~~~
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6628	     24	   1576	   8228	   2024	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
+19:46:49 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:187:4: error: case label does not reduce to an integer constant
+  187 |    case counter%3==1:
+      |    ^~~~
+../Core/Src/main.c:191:4: error: case label does not reduce to an integer constant
+  191 |    case counter%3==2:
+      |    ^~~~
+../Core/Src/main.c:196:4: error: case label does not reduce to an integer constant
+  196 |    case counter%3==0:
+      |    ^~~~
+make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
+"make -j4 all" terminated with exit code 2. Build might be incomplete.
+19:47:48 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:187:4: error: case label does not reduce to an integer constant
+  187 |    case (counter%3==1):
+      |    ^~~~
+../Core/Src/main.c:191:4: error: case label does not reduce to an integer constant
+  191 |    case counter%3==2:
+      |    ^~~~
+../Core/Src/main.c:196:4: error: case label does not reduce to an integer constant
+  196 |    case counter%3==0:
+      |    ^~~~
+make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
+"make -j4 all" terminated with exit code 2. Build might be incomplete.
+19:54:46 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c:218:1: error: expected identifier or '(' before '}' token
+  218 | }
+      | ^
+make: *** [Core/Src/subdir.mk:34: Core/Src/main.o] Error 1
+"make -j4 all" terminated with exit code 2. Build might be incomplete.
+19:55:14 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6792	     24	   1576	   8392	   20c8	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
+19:55:51 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6804	     24	   1568	   8396	   20cc	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+Finished building: Lab2.list
+ 
+ 
+19:56:35 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6804	     24	   1568	   8396	   20cc	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
+19:57:46 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6804	     24	   1568	   8396	   20cc	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
+19:58:05 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6800	     24	   1568	   8392	   20c8	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
+19:58:32 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-size   Lab2.elf 
+   text	   data	    bss	    dec	    hex	filename
+   6800	     24	   1568	   8392	   20c8	Lab2.elf
+Finished building: default.size.stdout
+ 
+19:58:56 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-size   Lab2.elf 
+   text	   data	    bss	    dec	    hex	filename
+   6800	     24	   1568	   8392	   20c8	Lab2.elf
+Finished building: default.size.stdout
+ 
+20:00:19 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-size   Lab2.elf 
+   text	   data	    bss	    dec	    hex	filename
+   6800	     24	   1568	   8392	   20c8	Lab2.elf
+Finished building: default.size.stdout
+ 
+20:00:58 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6800	     24	   1576	   8400	   20d0	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
+20:01:50 **** Incremental Build of configuration Debug for project Lab2 ****
+make -j4 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m4 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F407xx -c -I../Core/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc -I../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F4xx/Include -I../Drivers/CMSIS/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -o "Core/Src/main.o"
+arm-none-eabi-gcc -o "Lab2.elf" @"objects.list"   -mcpu=cortex-m4 -T"C:\Users\yurag\STM32CubeIDE\workspace_1.7.0\Lab2\STM32F407VGTX_FLASH.ld" --specs=nosys.specs -Wl,-Map="Lab2.map" -Wl,--gc-sections -static --specs=nano.specs -mfpu=fpv4-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: Lab2.elf
+ 
+arm-none-eabi-size   Lab2.elf 
+arm-none-eabi-objdump -h -S  Lab2.elf  > "Lab2.list"
+arm-none-eabi-objcopy  -O binary  Lab2.elf  "Lab2.bin"
+   text	   data	    bss	    dec	    hex	filename
+   6800	     24	   1568	   8392	   20c8	Lab2.elf
+Finished building: default.size.stdout
+ 
+Finished building: Lab2.bin
+ 
+Finished building: Lab2.list
+ 
