@@ -2669,16 +2669,16 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
  .debug_macro   0x000000000001e9f4      0x1b6 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
  .debug_macro   0x000000000001ebaa      0x1d4 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
 
-.debug_line     0x0000000000000000     0x4a73
- .debug_line    0x0000000000000000      0x7fb ./Core/Src/main.o
- .debug_line    0x00000000000007fb      0x67e ./Core/Src/stm32f4xx_hal_msp.o
- .debug_line    0x0000000000000e79      0x740 ./Core/Src/stm32f4xx_it.o
- .debug_line    0x00000000000015b9      0x6ff ./Core/Src/system_stm32f4xx.o
- .debug_line    0x0000000000001cb8       0x88 ./Core/Startup/startup_stm32f407vgtx.o
- .debug_line    0x0000000000001d40      0x965 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
- .debug_line    0x00000000000026a5      0xc14 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
- .debug_line    0x00000000000032b9      0xadb ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
- .debug_line    0x0000000000003d94      0xcdf ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
+.debug_line     0x0000000000000000     0x4a75
+ .debug_line    0x0000000000000000      0x7fd ./Core/Src/main.o
+ .debug_line    0x00000000000007fd      0x67e ./Core/Src/stm32f4xx_hal_msp.o
+ .debug_line    0x0000000000000e7b      0x740 ./Core/Src/stm32f4xx_it.o
+ .debug_line    0x00000000000015bb      0x6ff ./Core/Src/system_stm32f4xx.o
+ .debug_line    0x0000000000001cba       0x88 ./Core/Startup/startup_stm32f407vgtx.o
+ .debug_line    0x0000000000001d42      0x965 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal.o
+ .debug_line    0x00000000000026a7      0xc14 ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.o
+ .debug_line    0x00000000000032bb      0xadb ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_gpio.o
+ .debug_line    0x0000000000003d96      0xcdf ./Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc.o
 
 .debug_str      0x0000000000000000    0xbbe1e
  .debug_str     0x0000000000000000    0xbaa90 ./Core/Src/main.o
