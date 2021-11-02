@@ -65,15 +65,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	    	  switch(GPIO_Pin){
 
 	    	  case But1_Pin:
-	    		  counter+=1;
+	    		  counter=+1;
 				  break;
 
 	    	  case But2_Pin:
-	    		  counter-=1;
+	    		  counter=-1;
 				  break;
 
 	    	  case But3_Pin:
-	    		  counter+=2;
+	    		  counter=+2;
 				  break;
 
 	    	  case But4_Pin:
@@ -192,6 +192,20 @@ int main(void)
 			 diagonal_cross_blink(pins_diagonal_cross_blink,sizeof(pins_diagonal_cross_blink)/sizeof(pins_diagonal_cross_blink[0]),delay);
 	  }
 
+
+
+
+//	  if(pair_blink_start){
+//		  	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]),delay);
+//	  }
+//
+////	  if(cross_blink_start){
+////		  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]),delay);
+////	  }
+//
+//	  if(diagonal_cross_blink_start){
+//		  diagonal_cross_blink(pins_diagonal_cross_blink,sizeof(pins_diagonal_cross_blink)/sizeof(pins_diagonal_cross_blink[0]),delay);
+//	  }
 
 
     /* USER CODE END WHILE */
