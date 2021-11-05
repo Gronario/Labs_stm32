@@ -138,7 +138,7 @@ int main(void)
   {
 	  pair_blink(pins_pair_blink, sizeof(pins_pair_blink)/sizeof(pins_pair_blink[0]));
 	  cross_blink(pins_cross_blink,sizeof(pins_cross_blink)/sizeof(pins_cross_blink[0]));
-	  diagonal_cross_blink(pins_diagonal_cross_blink,sizeof(pins_diagonal_cross_blink)/sizeof(pins_diagonal_cross_blink[0]));
+//	  diagonal_cross_blink(pins_diagonal_cross_blink,sizeof(pins_diagonal_cross_blink)/sizeof(pins_diagonal_cross_blink[0]));
 
     /* USER CODE END WHILE */
 
