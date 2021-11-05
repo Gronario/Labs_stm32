@@ -1,7 +1,7 @@
-main.c:100:8:all_led	16	static
-main.c:64:5:main	24	static
-main.c:107:8:cross_blink	32	static
-main.c:126:8:pair_blink	32	static
-main.c:161:6:SystemClock_Config	88	static
-main.c:201:13:MX_GPIO_Init	32	static
-main.c:228:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:61:6:pair_blink	24	static
+main.c:73:6:cross_blink	24	static
+main.c:87:7:diagonal_cross_blink	24	static
+main.c:106:5:main	8	static
+main.c:154:6:SystemClock_Config	88	static
+main.c:194:13:MX_GPIO_Init	32	static
+main.c:221:6:Error_Handler	4	static,ignoring_inline_asm
