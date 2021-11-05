@@ -101,51 +101,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin){
 	    		  }
 	    		  break;
 
+
 	    	  default:
 	    		  __NOP();
 	    		  break;
 	    	  }
 	    }
-
-
-void pair_blink(uint16_t *array, uint16_t array_len){
-	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
-		  for (uint16_t j=0; j<array_len; j++){
-			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
-			  HAL_Delay(delay);
-			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
-		}
-	  }
-}
-	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
-
-
-void cross_blink(uint16_t *array,uint16_t array_len){
-	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
-		  for(uint16_t j=0;j<array_len;j++){
-			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
-			  HAL_Delay(delay);
-		  }
-		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
-		  HAL_Delay(delay);
-	  }
-}
-
-	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
-
-
-	void diagonal_cross_blink(uint16_t *array,uint16_t array_len){
-		  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
-			  for(uint16_t j=0;j<array_len;j++){
-				  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
-				  HAL_Delay(delay);
-				  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
-			  }
-		  }
-	  }
-
-	uint16_t pins_diagonal_cross_blink[] = {LED1_Pin|LED2_Pin, LED3_Pin|LED4_Pin};
-
 
 /* USER CODE END 0 */
 
@@ -179,6 +140,47 @@ int main(void)
   MX_GPIO_Init();
   /* USER CODE BEGIN 2 */
 
+
+  void pair_blink(uint16_t *array, uint16_t array_len){
+	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+		  for (uint16_t j=0; j<array_len; j++){
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+			  HAL_Delay(delay);
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
+		}
+	  }
+ }
+	  uint16_t pins_pair_blink[] = {LED1_Pin|LED3_Pin, LED2_Pin|LED4_Pin};
+
+
+  void cross_blink(uint16_t *array,uint16_t array_len){
+	  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+		  for(uint16_t j=0;j<array_len;j++){
+			  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+			  HAL_Delay(delay);
+		  }
+		  HAL_GPIO_WritePin(GPIOD,LED1_Pin|LED2_Pin|LED3_Pin|LED4_Pin,GPIO_PIN_RESET);
+		  HAL_Delay(delay);
+	  }
+  }
+
+  	  uint16_t pins_cross_blink[] = {LED1_Pin,LED3_Pin,LED2_Pin,LED4_Pin};
+
+
+  	void diagonal_cross_blink(uint16_t *array,uint16_t array_len){
+  		  for (uint16_t i=0; i<BLINK_CYCLES_QUANTITY; i++){
+  			  for(uint16_t j=0;j<array_len;j++){
+  				  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_SET);
+  				  HAL_Delay(delay);
+  				  HAL_GPIO_WritePin(GPIOD,array[j],GPIO_PIN_RESET);
+  			  }
+  		  }
+  	  }
+
+  	uint16_t pins_diagonal_cross_blink[] = {LED1_Pin|LED2_Pin, LED3_Pin|LED4_Pin};
+
+
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -197,6 +199,8 @@ int main(void)
 	  if (counter%3==0){
 			 diagonal_cross_blink(pins_diagonal_cross_blink,sizeof(pins_diagonal_cross_blink)/sizeof(pins_diagonal_cross_blink[0]));
 	  }
+
+
 
     /* USER CODE END WHILE */
 
