@@ -78,10 +78,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
 		HAL_TIM_PWM_Stop(&htim4, channel_arr[counter-1]);
 
-		if (counter>3){
+		if (counter>4){
 			counter=0;
 		}
-		HAL_TIM_PWM_Start(&htim4, channel_arr[counter++]);
+		if (counter==4){
+			HAL_TIM_PWM_Stop(&htim4, channel_arr[counter]);
+		}
+		HAL_TIM_PWM_Start(&htim4, channel_arr[counter]);
+		counter+=1;
 		break;
 
 
@@ -106,7 +110,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
 	case But4_Pin:       //duty cycle change  (+)
 
-		TIM4->CCR1=ccr_counter;
+		switch (counter){
+
+		case 1:
+			TIM4->CCR1=ccr_counter;
+			break;
+
+		case 2:
+			TIM4->CCR2=ccr_counter;
+			break;
+
+		case 3:
+			TIM4->CCR3=ccr_counter;
+			break;
+
+		case 4:
+			TIM4->CCR4=ccr_counter;
+			break;
+		}
+
 		ccr_counter+=3;
 		__NOP();
 		break;
@@ -117,7 +139,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 			__NOP();
 		}
 		else {
-			TIM4->CCR1=ccr_counter;
+			switch (counter){
+
+				case 1:
+					TIM4->CCR1=ccr_counter;
+					break;
+
+				case 2:
+					TIM4->CCR2=ccr_counter;
+					break;
+
+				case 3:
+					TIM4->CCR3=ccr_counter;
+					break;
+
+				case 4:
+					TIM4->CCR4=ccr_counter;
+					break;
+				}
+
 			ccr_counter-=3;
 		}
 
