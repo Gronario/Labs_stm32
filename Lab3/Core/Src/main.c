@@ -44,6 +44,14 @@ TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 
+uint16_t  counter=0;               //used to change LED
+uint8_t   channel_arr [] = {TIM_CHANNEL_1,TIM_CHANNEL_2,TIM_CHANNEL_3,TIM_CHANNEL_4};   //used to stop LED
+uint8_t   ARR = 50;              //auto reload register
+uint16_t  ccr_counter = 25;     //used to change duty cycle (starting value equals to 50% duty cycle)
+uint16_t  psc_counter = 5;     //used to change PWM frequency (starting value equals to 5 KHz frequency)
+
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,6 +64,73 @@ static void MX_TIM4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+float calc(uint8_t number){    //PSC calculation
+	float res= 320.0/number;
+	return res;
+}
+
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
+
+	switch (GPIO_PIN){
+
+	case But2_Pin:     //LED change
+
+		HAL_TIM_PWM_Stop(&htim4, channel_arr[counter-1]);
+
+		if (counter>3){
+			counter=0;
+		}
+		HAL_TIM_PWM_Start(&htim4, channel_arr[counter++]);
+		break;
+
+
+	case But1_Pin:     //frequency change (+)
+
+		  TIM4->PSC=calc(psc_counter);
+		  psc_counter+=5;
+		  break;
+
+
+	case But3_Pin:     //frequency change (-)
+
+		if (psc_counter==5){
+			__NOP();
+		}
+		else {
+			TIM4->PSC=calc(psc_counter);
+		  psc_counter-=5;
+		}
+
+		  break;
+
+	case But4_Pin:       //duty cycle change  (+)
+
+		TIM4->CCR1=ccr_counter;
+		ccr_counter+=3;
+		__NOP();
+		break;
+
+	case But5_Pin:       //duty cycle change  (-)
+
+		if (ccr_counter==1){
+			__NOP();
+		}
+		else {
+			TIM4->CCR1=ccr_counter;
+			ccr_counter-=3;
+		}
+
+		break;
+
+
+	default:
+		__NOP();
+		break;
+
+	}
+}
+
 
 /* USER CODE END 0 */
 
@@ -89,14 +164,16 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-  HAL_TIM_Base_Start_IT(&htim4);
-  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);
+
+  TIM4->ARR=ARR;
+
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
+	  TIM4->PSC=calc(psc_counter);
 
     /* USER CODE END WHILE */
 
@@ -164,9 +241,9 @@ static void MX_TIM4_Init(void)
 
   /* USER CODE END TIM4_Init 1 */
   htim4.Instance = TIM4;
-  htim4.Init.Prescaler = 16000;
+  htim4.Init.Prescaler = 63;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 500;
+  htim4.Init.Period = 49;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -189,10 +266,22 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 100;
+  sConfigOC.Pulse = 25;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_4) != HAL_OK)
   {
     Error_Handler();
   }
@@ -217,16 +306,6 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
-
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, LED1_Pin|LED3_Pin|LED4_Pin, GPIO_PIN_RESET);
-
-  /*Configure GPIO pins : LED1_Pin LED3_Pin LED4_Pin */
-  GPIO_InitStruct.Pin = LED1_Pin|LED3_Pin|LED4_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 
   /*Configure GPIO pins : But4_Pin But5_Pin But3_Pin But1_Pin */
   GPIO_InitStruct.Pin = But4_Pin|But5_Pin|But3_Pin|But1_Pin;
