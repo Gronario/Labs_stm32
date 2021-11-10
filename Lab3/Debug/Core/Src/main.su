@@ -1,7 +1,7 @@
-main.c:68:7:calc	24	static
-main.c:73:6:HAL_GPIO_EXTI_Callback	16	static,ignoring_inline_asm
+main.c:67:10:calc	24	static
+main.c:72:6:HAL_GPIO_EXTI_Callback	24	static,ignoring_inline_asm
 main.c:181:5:main	8	static
-main.c:229:6:SystemClock_Config	88	static
-main.c:269:13:MX_TIM4_Init	64	static
-main.c:340:13:MX_GPIO_Init	48	static
-main.c:379:6:Error_Handler	4	static,ignoring_inline_asm
+main.c:225:6:SystemClock_Config	88	static
+main.c:264:13:MX_TIM4_Init	64	static
+main.c:335:13:MX_GPIO_Init	48	static
+main.c:374:6:Error_Handler	4	static,ignoring_inline_asm

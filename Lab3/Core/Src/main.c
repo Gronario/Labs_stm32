@@ -45,9 +45,8 @@ TIM_HandleTypeDef htim4;
 /* USER CODE BEGIN PV */
 
 uint16_t  counter=0;               //used to change LED
-uint8_t   channel_arr [] = {TIM_CHANNEL_1,TIM_CHANNEL_2,TIM_CHANNEL_3,TIM_CHANNEL_4};   //used to stop LED
-uint8_t   ARR = 50;              //auto reload register
-uint16_t  ccr_counter = 25;     //used to change duty cycle (starting value equals to 50% duty cycle)
+const uint8_t channel_arr [] = {TIM_CHANNEL_1,TIM_CHANNEL_2,TIM_CHANNEL_3,TIM_CHANNEL_4};   //used to stop LED
+uint16_t  ccr_counter = 12;     //used to change duty cycle (starting value equals to 50% duty cycle)
 uint16_t  psc_counter = 5;     //used to change PWM frequency (starting value equals to 5 KHz frequency)
 
 
@@ -65,8 +64,8 @@ static void MX_TIM4_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-float calc(uint8_t number){    //PSC calculation
-	float res= 320.0/number;
+uint32_t calc(uint8_t number){    //PSC calculation
+	uint32_t res= 320/number;
 	return res;
 }
 
@@ -78,14 +77,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
 		HAL_TIM_PWM_Stop(&htim4, channel_arr[counter-1]);
 
-		if (counter>4){
+		if (counter==4){
 			counter=0;
 		}
-		if (counter==4){
-			HAL_TIM_PWM_Stop(&htim4, channel_arr[counter]);
-		}
+		else{
 		HAL_TIM_PWM_Start(&htim4, channel_arr[counter]);
 		counter+=1;
+		}
+
+
 		break;
 
 
@@ -129,13 +129,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 			break;
 		}
 
-		ccr_counter+=3;
+		ccr_counter+=2;
 		__NOP();
 		break;
 
 	case But5_Pin:       //duty cycle change  (-)
 
-		if (ccr_counter==1){
+		if (ccr_counter==0){
 			__NOP();
 		}
 		else {
@@ -158,7 +158,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 					break;
 				}
 
-			ccr_counter-=3;
+			ccr_counter-=2;
 		}
 
 		break;
@@ -204,16 +204,12 @@ int main(void)
   MX_GPIO_Init();
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
-
-  TIM4->ARR=ARR;
-
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
   {
-	  TIM4->PSC=calc(psc_counter);
 
     /* USER CODE END WHILE */
 
@@ -238,9 +234,8 @@ void SystemClock_Config(void)
   /** Initializes the RCC Oscillators according to the specified parameters
   * in the RCC_OscInitTypeDef structure.
   */
-  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
-  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-  RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -250,7 +245,7 @@ void SystemClock_Config(void)
   */
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
-  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSI;
+  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_HSE;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV1;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
@@ -283,7 +278,7 @@ static void MX_TIM4_Init(void)
   htim4.Instance = TIM4;
   htim4.Init.Prescaler = 63;
   htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
-  htim4.Init.Period = 49;
+  htim4.Init.Period = 25;
   htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
   htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
   if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
@@ -306,7 +301,7 @@ static void MX_TIM4_Init(void)
     Error_Handler();
   }
   sConfigOC.OCMode = TIM_OCMODE_PWM1;
-  sConfigOC.Pulse = 25;
+  sConfigOC.Pulse = 13;
   sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
   sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
   if (HAL_TIM_PWM_ConfigChannel(&htim4, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
