@@ -32,6 +32,8 @@
 
 /* Private define ------------------------------------------------------------*/
 /* USER CODE BEGIN PD */
+#define ADC_BUF_SIZE 8    //ADC data maximum size
+#define __VREFANALOG_VOLTAGE__ 3300
 /* USER CODE END PD */
 
 /* Private macro -------------------------------------------------------------*/
@@ -41,13 +43,17 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc1;
+DMA_HandleTypeDef hdma_adc1;
 
+TIM_HandleTypeDef htim2;
 TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
-
+uint16_t ADC_buffer[ADC_BUF_SIZE];  //used to store tempature values
 uint32_t adcValue = 0;
+uint8_t flag=0;
+uint8_t idx=0;
 
 /* USER CODE END PV */
 
@@ -56,6 +62,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_TIM4_Init(void);
+static void MX_DMA_Init(void);
+static void MX_TIM2_Init(void);
 static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
@@ -64,8 +72,8 @@ static void MX_TIM3_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-uint32_t ccr_calc(uint32_t adc){    // pulse calculation (pulse depends on ADC value)
-	uint32_t res=adc*0.024;
+uint32_t ccr_calc(uint32_t adc){      // pulse calculation (pulse depends on ADC value)
+	uint32_t res=adc*0.024;          //y=k*x, k=4095/100=0.024, y=0.024*x
 	return res;                     //res 0-100
 }
 
@@ -99,12 +107,20 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC1_Init();               //ADC used to change duty cycle of the blue LED by potentiometer
-  MX_TIM4_Init();              //TIM4 is used to control all Led by PWM except red one
-  MX_TIM3_Init();             //TIM3 is used as an interrupt timer, used to control Red Led
+  MX_ADC1_Init();         //used to change blue LED brightness
+  MX_TIM4_Init();        //used for PWM
+  MX_DMA_Init();        //used for Internal temperature sensor
+  MX_TIM2_Init();      //used for DMA (1 Hz overflow)
+  MX_TIM3_Init();     //used to toggle red led
   /* USER CODE BEGIN 2 */
-
+                            //calibration of ADC, calibration is needed to remove the offset error, it should be run on the each power off of the application
   HAL_TIM_Base_Start_IT(&htim3);
+
+  if (HAL_OK != HAL_ADC_Start_DMA(&hadc1, ADC_buffer, ADC_BUF_SIZE))
+	  Error_Handler();
+
+  if (HAL_OK != HAL_TIM_Base_Start(&htim2))
+	  Error_Handler();
 
   /* USER CODE END 2 */
 
@@ -119,6 +135,13 @@ int main(void)
   while (1)
   {
 
+	  if(1==flag){
+		   for(idx=0;idx<ADC_BUF_SIZE;idx++){
+			   ADC_buffer[idx] =  __LL_ADC_CALC_TEMPERATURE(__VREFANALOG_VOLTAGE__,ADC_buffer[idx],LL_ADC_RESOLUTION_12B);
+		   }
+		  flag=0;
+	  }
+
 	  adcPoolResult = HAL_ADC_PollForConversion(&hadc1, 1);
 
 	  if(adcPoolResult == HAL_OK){
@@ -126,7 +149,6 @@ int main(void)
 	  }
 
 	  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);  //Blue LED
-
 	  TIM4->CCR4=ccr_calc(adcValue);            // duty cycle change
 
     /* USER CODE END WHILE */
@@ -194,13 +216,13 @@ static void MX_ADC1_Init(void)
   /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
   */
   hadc1.Instance = ADC1;
-  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV8;
+  hadc1.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
   hadc1.Init.Resolution = ADC_RESOLUTION_12B;
   hadc1.Init.ScanConvMode = DISABLE;
   hadc1.Init.ContinuousConvMode = ENABLE;
   hadc1.Init.DiscontinuousConvMode = DISABLE;
-  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
-  hadc1.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc1.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_RISING;
+  hadc1.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T2_TRGO;
   hadc1.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc1.Init.NbrOfConversion = 1;
   hadc1.Init.DMAContinuousRequests = DISABLE;
@@ -221,6 +243,51 @@ static void MX_ADC1_Init(void)
   /* USER CODE BEGIN ADC1_Init 2 */
 
   /* USER CODE END ADC1_Init 2 */
+
+}
+
+/**
+  * @brief TIM2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM2_Init(void)
+{
+
+  /* USER CODE BEGIN TIM2_Init 0 */
+
+  /* USER CODE END TIM2_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM2_Init 1 */
+
+  /* USER CODE END TIM2_Init 1 */
+  htim2.Instance = TIM2;
+  htim2.Init.Prescaler = 7999;
+  htim2.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim2.Init.Period = 999;
+  htim2.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim2.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&htim2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim2, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_UPDATE;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_ENABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM2_Init 2 */
+
+  /* USER CODE END TIM2_Init 2 */
 
 }
 
@@ -337,6 +404,22 @@ static void MX_TIM4_Init(void)
 }
 
 /**
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void)
+{
+
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA2_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA2_Stream0_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA2_Stream0_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(DMA2_Stream0_IRQn);
+
+}
+
+/**
   * @brief GPIO Initialization Function
   * @param None
   * @retval None
@@ -363,6 +446,12 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc){
+
+	if(HAL_ADC_Stop_DMA(&hadc1) != HAL_OK)
+		Error_Handler();
+	flag=1;
+}
 /* USER CODE END 4 */
 
 /**
