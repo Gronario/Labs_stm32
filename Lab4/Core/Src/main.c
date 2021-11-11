@@ -48,7 +48,6 @@ TIM_HandleTypeDef htim4;
 /* USER CODE BEGIN PV */
 
 uint32_t adcValue = 0;
-uint16_t  mycount=0;
 
 /* USER CODE END PV */
 
@@ -100,9 +99,9 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_ADC1_Init();
-  MX_TIM4_Init();
-  MX_TIM3_Init();
+  MX_ADC1_Init();               //ADC used to change duty cycle of the blue LED by potentiometer
+  MX_TIM4_Init();              //TIM4 is used to control all Led by PWM except red one
+  MX_TIM3_Init();             //TIM3 is used as an interrupt timer, used to control Red Led
   /* USER CODE BEGIN 2 */
 
   HAL_TIM_Base_Start_IT(&htim3);
@@ -130,10 +129,6 @@ int main(void)
 
 	  TIM4->CCR4=ccr_calc(adcValue);            // duty cycle change
 
-//	  if (adcValue>3500){
-//		  HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-//
-//	  }
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

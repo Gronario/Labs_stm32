@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   0000aaef  00000000  00000000  0002003c  2**0
+ 13 .debug_info   0000aadd  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 0000179d  00000000  00000000  0002ab2b  2**0
+ 14 .debug_abbrev 0000179d  00000000  00000000  0002ab19  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000a60  00000000  00000000  0002c2c8  2**3
+ 15 .debug_aranges 00000a60  00000000  00000000  0002c2b8  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_ranges 000009a8  00000000  00000000  0002cd28  2**3
+ 16 .debug_ranges 000009a8  00000000  00000000  0002cd18  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00020f6d  00000000  00000000  0002d6d0  2**0
+ 17 .debug_macro  00020f6d  00000000  00000000  0002d6c0  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000b2d5  00000000  00000000  0004e63d  2**0
+ 18 .debug_line   0000b2d5  00000000  00000000  0004e62d  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000d0e87  00000000  00000000  00059912  2**0
+ 19 .debug_str    000d0e7f  00000000  00000000  00059902  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000053  00000000  00000000  0012a799  2**0
+ 20 .comment      00000053  00000000  00000000  0012a781  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00002c70  00000000  00000000  0012a7ec  2**2
+ 21 .debug_frame  00002c70  00000000  00000000  0012a7d4  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -929,11 +929,11 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
  8000b1e:	f000 f9bb 	bl	8000e98 <MX_GPIO_Init>
-  MX_ADC1_Init();
+  MX_ADC1_Init();               //ADC used to change duty cycle of the blue LED by potentiometer
  8000b22:	f000 f88d 	bl	8000c40 <MX_ADC1_Init>
-  MX_TIM4_Init();
+  MX_TIM4_Init();              //TIM4 is used to control all Led by PWM except red one
  8000b26:	f000 f92b 	bl	8000d80 <MX_TIM4_Init>
-  MX_TIM3_Init();
+  MX_TIM3_Init();             //TIM3 is used as an interrupt timer, used to control Red Led
  8000b2a:	f000 f8db 	bl	8000ce4 <MX_TIM3_Init>
   /* USER CODE BEGIN 2 */
 
