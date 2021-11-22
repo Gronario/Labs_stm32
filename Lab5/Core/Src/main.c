@@ -106,14 +106,46 @@ int main(void)
 
 		  switch(rcvBuf[0]){
 
+
+
 			  case '1':
-				  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_SET);
+				  HAL_GPIO_WritePin(Blue_LED_GPIO_Port,Blue_LED_Pin,GPIO_PIN_SET);
 				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue ON\r\n", 7+2,10);
 				  break;
 
-			  case '0':
-				  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+			  case '2':
+				  HAL_GPIO_WritePin(Blue_LED_GPIO_Port,Blue_LED_Pin,GPIO_PIN_RESET);
 				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue OFF\r\n", 8+2,10);
+				  break;
+
+			  case '3':
+				  HAL_GPIO_WritePin(Orange_LED_GPIO_Port,Orange_LED_Pin,GPIO_PIN_SET);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10);
+				  break;
+
+			  case '4':
+				  HAL_GPIO_WritePin(Orange_LED_GPIO_Port,Orange_LED_Pin,GPIO_PIN_RESET);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange OFF\r\n", 10+2,10);
+				  break;
+
+			  case '5':
+				  HAL_GPIO_WritePin(Red_LED_GPIO_Port,Red_LED_Pin,GPIO_PIN_SET);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red ON\r\n", 6+2,10);
+				  break;
+
+			  case '6':
+				  HAL_GPIO_WritePin(Red_LED_GPIO_Port,Red_LED_Pin,GPIO_PIN_RESET);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red OFF\r\n", 7+2,10);
+				  break;
+
+			  case '7':
+				  HAL_GPIO_WritePin(Green_LED_GPIO_Port,Green_LED_Pin,GPIO_PIN_SET);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green ON\r\n", 8+2,10);
+				  break;
+
+			  case '8':
+				  HAL_GPIO_WritePin(Green_LED_GPIO_Port,Green_LED_Pin,GPIO_PIN_RESET);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green OFF\r\n", 9+2,10);
 				  break;
 
 			  default:
@@ -213,10 +245,10 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_15, GPIO_PIN_RESET);
+  HAL_GPIO_WritePin(GPIOD, Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin, GPIO_PIN_RESET);
 
-  /*Configure GPIO pin : PD15 */
-  GPIO_InitStruct.Pin = GPIO_PIN_15;
+  /*Configure GPIO pins : Green_LED_Pin Orange_LED_Pin Red_LED_Pin Blue_LED_Pin */
+  GPIO_InitStruct.Pin = Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
