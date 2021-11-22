@@ -48,12 +48,17 @@ TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
 
+uint16_t potentiometr_value;            //adc value from potentiometr
 uint16_t internal_temp;                //adc value from internal temp sensor
-uint16_t potentiometr_value;          //adc value from potentiometr
-uint16_t external_temp_value;        //adc value from external temp sensor
+uint16_t external_temp_value;         //adc value from external temp sensor
+
+uint16_t emergency_counter_potentiometr=0;
+uint16_t emergency_counter_internal_temp=0;
+uint16_t emergency_counter_external_temp=0;
 
 float tCelsius_int;
 float tCelsius_ext;
+
 #define MAX_CCR 100
 
 /* USER CODE END PV */
@@ -77,21 +82,33 @@ uint16_t ccr_calc_potentiometr(uint16_t potentiometr_value){             // puls
 	return res;                                                        //res 0-100
 }
 
-uint16_t ccr_calc_internal_temp(uint16_t internal_temp){           // pulse calculation (pulse depends on ADC value)
+uint16_t ccr_calc_internal_temp(uint16_t internal_temp){              // pulse calculation (pulse depends on ADC value)
 	uint16_t res = internal_temp * 0.813 - 826.17;                   //linear interpolation was used to make this formula
 	if (res > MAX_CCR){
 		res = MAX_CCR;
 	}
-	return res;                                               //res 0-100
+	return res;                                                   //res 0-100
 }
 
-uint16_t ccr_calc_external_temp(uint16_t external_temp_value){           // pulse calculation (pulse depends on ADC value)
+uint16_t ccr_calc_external_temp(uint16_t external_temp_value){          // pulse calculation (pulse depends on ADC value)
 	uint16_t res = external_temp_value * -0.131 + 275.2;               //linear interpolation was used to make this formula
 	if (res > MAX_CCR){
 		res = MAX_CCR;
 	}
-	return res;                                                      //res 0-100
+	return res;                                                     //res 0-100
 }
+
+void emergency_blink(uint16_t emergency_counter_potentiometr){
+	if (emergency_counter_potentiometr==1){
+		HAL_Delay(500);
+		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+		HAL_Delay(500);
+	}
+	else if (emergency_counter_potentiometr==0){
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+	}
+}
+
 
 /* USER CODE END 0 */
 
@@ -102,9 +119,6 @@ uint16_t ccr_calc_external_temp(uint16_t external_temp_value){           // puls
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
-
-
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -154,16 +168,19 @@ int main(void)
 
 	     tCelsius_int = ((3/4095.0 * internal_temp - 0.76) / 0.0025) +25.0;  //Temperature formula is C = ((V_sense - V25) / Avg_Slope) +25
 
+//	     if (tCelsius_int>40){
+//	    	 emergency_counter_potentiometr+=1;
+//	     }
 	     // formula for temperature is located in reference manual page 413
 	     // V25 = 0.76            (info from data sheet page 138)
 	     // Avg_Slope = 0.0025    (info from data sheet page 138)
 	     // V_sense = ADC_power_voltage / 4096 * readValue_from_ADC   (ADC_power_voltage = ~3V can be measured by multimeter)
 
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);             //Orange LED is TIM_CHANNEL_2 (Blue LED is TIM_CHANNEL_4)
-		  TIM4->CCR4=ccr_calc_internal_temp(internal_temp);    // when temp=17, CCR=10, when temp=26, CCR=30, when temp=50, CCR=95
+		  TIM4->CCR2=ccr_calc_internal_temp(internal_temp);    // when temp=17, CCR=10, when temp=26, CCR=30, when temp=50, CCR=95
 
 
-		  //--------------------ADC for internal temperature------------------
+		  //--------------------ADC for external temperature------------------
 
 		  adcPoolResultext = HAL_ADC_PollForConversion(&hadc2, 1);
 
@@ -173,8 +190,11 @@ int main(void)
 
 		  tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
 
+//		 if (tCelsius_ext>40){
+//			 emergency_counter_potentiometr+=1;
+//		 }
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);      //Green LED is TIM_CHANNEL_1
-		  TIM4->CCR4=ccr_calc_potentiometr(external_temp_value);
+		  TIM4->CCR1=ccr_calc_potentiometr(external_temp_value);
 
 
 
@@ -186,11 +206,18 @@ int main(void)
 			  potentiometr_value = HAL_ADC_GetValue(&hadc3);
 		  }
 
+		 if ((potentiometr_value>3000) & (emergency_counter_potentiometr==0)){
+			 emergency_counter_potentiometr+=1;
+		 }
+		 else if ((potentiometr_value<3000) & (emergency_counter_potentiometr==1)){
+			 emergency_counter_potentiometr-=1;
+		 }
+
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);      //Blue LED is TIM_CHANNEL_4
 		  TIM4->CCR4=ccr_calc_potentiometr(potentiometr_value);
 
 
-
+		  emergency_blink(emergency_counter_potentiometr);
 
 
 
