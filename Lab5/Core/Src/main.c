@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -40,9 +40,16 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
+ADC_HandleTypeDef hadc2;
+
+TIM_HandleTypeDef htim4;
+
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
+
+float tCelsius_ext;
+uint16_t external_temp_value;         //adc value from external temp sensor
 
 /* USER CODE END PV */
 
@@ -50,6 +57,8 @@ UART_HandleTypeDef huart3;
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART3_UART_Init(void);
+static void MX_ADC2_Init(void);
+static void MX_TIM4_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -57,28 +66,52 @@ static void MX_USART3_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
 	  switch(GPIO_PIN){
 
 		  case But1_Pin:
 			  HAL_GPIO_TogglePin(Blue_LED_GPIO_Port,Blue_LED_Pin);
-			  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue ON\r\n", 7+2,10);
+
+			  if(HAL_GPIO_ReadPin(Blue_LED_GPIO_Port,Blue_LED_Pin) == GPIO_PIN_SET){
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue ON\r\n", 7+2,10);
+			  }
+			  else{
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue OFF\r\n", 8+2,10);
+			  }
+
 			  break;
 
 		  case But2_Pin:
 			  HAL_GPIO_TogglePin(Orange_LED_GPIO_Port,Orange_LED_Pin);
-			  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10);
+
+			  if(HAL_GPIO_ReadPin(Orange_LED_GPIO_Port,Orange_LED_Pin) == GPIO_PIN_SET){
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10);
+			  }
+			  else{
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange OFF\r\n", 10+2,10);
+			  }
 			  break;
 
 		  case But3_Pin:
 			  HAL_GPIO_TogglePin(Red_LED_GPIO_Port,Red_LED_Pin);
-			  HAL_UART_Transmit(&huart3, (uint8_t *)"Red ON\r\n", 6+2,10);
+			  if(HAL_GPIO_ReadPin(Red_LED_GPIO_Port,Red_LED_Pin) == GPIO_PIN_SET){
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red ON\r\n", 6+2,10);
+			  }
+			  else{
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red OFF\r\n", 7+2,10);
+			  }
 			  break;
 
 		  case But4_Pin:
 			  HAL_GPIO_TogglePin(Green_LED_GPIO_Port,Green_LED_Pin);
-			  HAL_UART_Transmit(&huart3, (uint8_t *)"Green ON\r\n", 8+2,10);
+			  if(HAL_GPIO_ReadPin(Green_LED_GPIO_Port,Green_LED_Pin) == GPIO_PIN_SET){
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green ON\r\n", 8+2,10);
+			  }
+			  else{
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green OFF\r\n", 9+2,10);
+			  }
 			  break;
 
 		  default:
@@ -86,6 +119,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 			  break;
 	  }
 }
+
 
 /* USER CODE END 0 */
 
@@ -118,12 +152,21 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_USART3_UART_Init();
+  MX_ADC2_Init();
+  MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
+
+  HAL_TIM_Base_Start_IT(&htim4);
+  HAL_ADC_Start(&hadc2);         //ADC for external temperature
+  volatile HAL_StatusTypeDef adcPoolResultext;
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
+
+//  uint8_t msg[512];
+
   while (1)
   {
 
@@ -181,6 +224,18 @@ int main(void)
 				  break;
 		  }
 	  }
+
+
+	  //--------------------ADC for external temperature------------------
+
+	  adcPoolResultext = HAL_ADC_PollForConversion(&hadc2, 1);
+
+	  if(adcPoolResultext == HAL_OK){
+		  external_temp_value = HAL_ADC_GetValue(&hadc2);
+	  }
+
+	  tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
+
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -228,6 +283,101 @@ void SystemClock_Config(void)
 }
 
 /**
+  * @brief ADC2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_ADC2_Init(void)
+{
+
+  /* USER CODE BEGIN ADC2_Init 0 */
+
+  /* USER CODE END ADC2_Init 0 */
+
+  ADC_ChannelConfTypeDef sConfig = {0};
+
+  /* USER CODE BEGIN ADC2_Init 1 */
+
+  /* USER CODE END ADC2_Init 1 */
+  /** Configure the global features of the ADC (Clock, Resolution, Data Alignment and number of conversion)
+  */
+  hadc2.Instance = ADC2;
+  hadc2.Init.ClockPrescaler = ADC_CLOCK_SYNC_PCLK_DIV2;
+  hadc2.Init.Resolution = ADC_RESOLUTION_12B;
+  hadc2.Init.ScanConvMode = DISABLE;
+  hadc2.Init.ContinuousConvMode = ENABLE;
+  hadc2.Init.DiscontinuousConvMode = DISABLE;
+  hadc2.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  hadc2.Init.ExternalTrigConv = ADC_SOFTWARE_START;
+  hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  hadc2.Init.NbrOfConversion = 1;
+  hadc2.Init.DMAContinuousRequests = DISABLE;
+  hadc2.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  if (HAL_ADC_Init(&hadc2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /** Configure for the selected ADC regular channel its corresponding rank in the sequencer and its sample time.
+  */
+  sConfig.Channel = ADC_CHANNEL_9;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_480CYCLES;
+  if (HAL_ADC_ConfigChannel(&hadc2, &sConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN ADC2_Init 2 */
+
+  /* USER CODE END ADC2_Init 2 */
+
+}
+
+/**
+  * @brief TIM4 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM4_Init(void)
+{
+
+  /* USER CODE BEGIN TIM4_Init 0 */
+
+  /* USER CODE END TIM4_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM4_Init 1 */
+
+  /* USER CODE END TIM4_Init 1 */
+  htim4.Instance = TIM4;
+  htim4.Init.Prescaler = 15999;
+  htim4.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim4.Init.Period = 4999;
+  htim4.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim4.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim4) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim4, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM4_Init 2 */
+
+  /* USER CODE END TIM4_Init 2 */
+
+}
+
+/**
   * @brief USART3 Initialization Function
   * @param None
   * @retval None
@@ -270,6 +420,7 @@ static void MX_GPIO_Init(void)
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
   /* GPIO Ports Clock Enable */
+  __HAL_RCC_GPIOB_CLK_ENABLE();
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOC_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();

@@ -56,7 +56,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern TIM_HandleTypeDef htim4;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -213,6 +213,26 @@ void EXTI9_5_IRQHandler(void)
   /* USER CODE BEGIN EXTI9_5_IRQn 1 */
 
   /* USER CODE END EXTI9_5_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM4 global interrupt.
+  */
+void TIM4_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM4_IRQn 0 */
+//	HAL_GPIO_TogglePin(Red_LED_GPIO_Port, Red_LED_Pin);
+
+	uint8_t msg[512];
+	extern float tCelsius_ext;
+	extern UART_HandleTypeDef huart3;
+	uint8_t tx_buffer[]="Hello world\n\r";
+	HAL_UART_Transmit(&huart3, msg,sprintf((char *)msg,"\n\rExternal temperature is = %d",(uint8_t)tCelsius_ext),0XFFFF);
+  /* USER CODE END TIM4_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim4);
+  /* USER CODE BEGIN TIM4_IRQn 1 */
+
+  /* USER CODE END TIM4_IRQn 1 */
 }
 
 /**
