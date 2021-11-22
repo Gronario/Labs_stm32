@@ -57,6 +57,36 @@ static void MX_USART3_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
+
+	  switch(GPIO_PIN){
+
+		  case But1_Pin:
+			  HAL_GPIO_TogglePin(Blue_LED_GPIO_Port,Blue_LED_Pin);
+			  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue ON\r\n", 7+2,10);
+			  break;
+
+		  case But2_Pin:
+			  HAL_GPIO_TogglePin(Orange_LED_GPIO_Port,Orange_LED_Pin);
+			  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10);
+			  break;
+
+		  case But3_Pin:
+			  HAL_GPIO_TogglePin(Red_LED_GPIO_Port,Red_LED_Pin);
+			  HAL_UART_Transmit(&huart3, (uint8_t *)"Red ON\r\n", 6+2,10);
+			  break;
+
+		  case But4_Pin:
+			  HAL_GPIO_TogglePin(Green_LED_GPIO_Port,Green_LED_Pin);
+			  HAL_UART_Transmit(&huart3, (uint8_t *)"Green ON\r\n", 8+2,10);
+			  break;
+
+		  default:
+			  HAL_UART_Transmit(&huart3, (uint8_t *)"UnexpCmd\r\n", 8+2,10);
+			  break;
+	  }
+}
+
 /* USER CODE END 0 */
 
 /**
@@ -105,8 +135,6 @@ int main(void)
 	  if (result == HAL_OK){
 
 		  switch(rcvBuf[0]){
-
-
 
 			  case '1':
 				  HAL_GPIO_WritePin(Blue_LED_GPIO_Port,Blue_LED_Pin,GPIO_PIN_SET);
@@ -243,6 +271,8 @@ static void MX_GPIO_Init(void)
 
   /* GPIO Ports Clock Enable */
   __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
 
   /*Configure GPIO pin Output Level */
   HAL_GPIO_WritePin(GPIOD, Green_LED_Pin|Orange_LED_Pin|Red_LED_Pin|Blue_LED_Pin, GPIO_PIN_RESET);
@@ -253,6 +283,25 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+  /*Configure GPIO pins : But4_Pin But5_Pin But3_Pin But1_Pin */
+  GPIO_InitStruct.Pin = But4_Pin|But5_Pin|But3_Pin|But1_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+
+  /*Configure GPIO pin : But2_Pin */
+  GPIO_InitStruct.Pin = But2_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(But2_GPIO_Port, &GPIO_InitStruct);
+
+  /* EXTI interrupt init*/
+  HAL_NVIC_SetPriority(EXTI9_5_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI9_5_IRQn);
+
+  HAL_NVIC_SetPriority(EXTI15_10_IRQn, 0, 0);
+  HAL_NVIC_EnableIRQ(EXTI15_10_IRQn);
 
 }
 
