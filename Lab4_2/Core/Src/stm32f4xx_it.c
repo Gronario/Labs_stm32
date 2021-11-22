@@ -245,9 +245,6 @@ void TIM3_IRQHandler(void)
 
 	blink(arr,emergency_counter);
 
-
-
-
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
   /* USER CODE BEGIN TIM3_IRQn 1 */

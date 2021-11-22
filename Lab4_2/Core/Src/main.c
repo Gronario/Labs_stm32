@@ -100,18 +100,6 @@ uint16_t ccr_calc_external_temp(uint16_t external_temp_value){          // pulse
 	return res;                                                     //res 0-100
 }
 
-//void emergency_blink(uint16_t emergency_counter_potentiometr){
-//	if (emergency_counter_potentiometr==1){
-//		HAL_Delay(500);
-//		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-//		HAL_Delay(500);
-//	}
-//	else if (emergency_counter_potentiometr==0){
-//		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-//	}
-//}
-
-
 /* USER CODE END 0 */
 
 /**
@@ -142,10 +130,10 @@ int main(void)
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_ADC1_Init();
-  MX_TIM4_Init();
+  MX_TIM4_Init();                     //TIM4 is used to control PWM signal on orange,blue,green LED
   MX_ADC2_Init();
   MX_ADC3_Init();
-  MX_TIM3_Init();
+  MX_TIM3_Init();                   //TIM3 is used to control via interrupts frequency of the red LED
   /* USER CODE BEGIN 2 */
 
   HAL_ADC_Start(&hadc1);          //ADC for internal temperature
@@ -233,10 +221,6 @@ int main(void)
 
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);      //Blue LED is TIM_CHANNEL_4
 		  TIM4->CCR4=ccr_calc_potentiometr(potentiometr_value);
-
-
-//		  emergency_blink(emergency_counter_potentiometr);
-
 
 
     /* USER CODE END WHILE */
@@ -364,7 +348,7 @@ static void MX_ADC2_Init(void)
   hadc2.Init.DataAlign = ADC_DATAALIGN_RIGHT;
   hadc2.Init.NbrOfConversion = 1;
   hadc2.Init.DMAContinuousRequests = DISABLE;
-  hadc2.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  hadc2.Init.EOCSelection = ADC_EOC_SEQ_CONV;    //it used to make 1 ADC request or continous
   if (HAL_ADC_Init(&hadc2) != HAL_OK)
   {
     Error_Handler();

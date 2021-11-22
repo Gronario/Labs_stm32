@@ -29,23 +29,23 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   ALLOC
  12 .ARM.attributes 00000030  00000000  00000000  0002000c  2**0
                   CONTENTS, READONLY
- 13 .debug_info   0000ad6f  00000000  00000000  0002003c  2**0
+ 13 .debug_info   0000ad6c  00000000  00000000  0002003c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 14 .debug_abbrev 00001817  00000000  00000000  0002adab  2**0
+ 14 .debug_abbrev 00001817  00000000  00000000  0002ada8  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 15 .debug_aranges 00000a88  00000000  00000000  0002c5c8  2**3
+ 15 .debug_aranges 00000a88  00000000  00000000  0002c5c0  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 16 .debug_ranges 000009d0  00000000  00000000  0002d050  2**3
+ 16 .debug_ranges 000009d0  00000000  00000000  0002d048  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  00020f54  00000000  00000000  0002da20  2**0
+ 17 .debug_macro  00020f54  00000000  00000000  0002da18  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   0000b4e6  00000000  00000000  0004e974  2**0
+ 18 .debug_line   0000b4e6  00000000  00000000  0004e96c  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000d0f77  00000000  00000000  00059e5a  2**0
+ 19 .debug_str    000d0f77  00000000  00000000  00059e52  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000053  00000000  00000000  0012add1  2**0
+ 20 .comment      00000053  00000000  00000000  0012adc9  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00002d70  00000000  00000000  0012ae24  2**2
+ 21 .debug_frame  00002d70  00000000  00000000  0012ae1c  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -1175,13 +1175,13 @@ int main(void)
  8000df6:	f000 fbcd 	bl	8001594 <MX_GPIO_Init>
   MX_ADC1_Init();
  8000dfa:	f000 f9fb 	bl	80011f4 <MX_ADC1_Init>
-  MX_TIM4_Init();
+  MX_TIM4_Init();                     //TIM4 is used to control PWM signal on orange,blue,green LED
  8000dfe:	f000 fb3d 	bl	800147c <MX_TIM4_Init>
   MX_ADC2_Init();
  8000e02:	f000 fa49 	bl	8001298 <MX_ADC2_Init>
   MX_ADC3_Init();
  8000e06:	f000 fa99 	bl	800133c <MX_ADC3_Init>
-  MX_TIM3_Init();
+  MX_TIM3_Init();                   //TIM3 is used to control via interrupts frequency of the red LED
  8000e0a:	f000 fae9 	bl	80013e0 <MX_TIM3_Init>
   /* USER CODE BEGIN 2 */
 
@@ -1889,7 +1889,7 @@ static void MX_ADC2_Init(void)
  80012e8:	4b11      	ldr	r3, [pc, #68]	; (8001330 <MX_ADC2_Init+0x98>)
  80012ea:	2200      	movs	r2, #0
  80012ec:	f883 2030 	strb.w	r2, [r3, #48]	; 0x30
-  hadc2.Init.EOCSelection = ADC_EOC_SEQ_CONV;
+  hadc2.Init.EOCSelection = ADC_EOC_SEQ_CONV;    //it used to make 1 ADC request or continous
  80012f0:	4b0f      	ldr	r3, [pc, #60]	; (8001330 <MX_ADC2_Init+0x98>)
  80012f2:	2200      	movs	r2, #0
  80012f4:	615a      	str	r2, [r3, #20]
@@ -3149,9 +3149,6 @@ void TIM3_IRQHandler(void)
  80019dc:	4611      	mov	r1, r2
  80019de:	4618      	mov	r0, r3
  80019e0:	f7ff ff94 	bl	800190c <blink.8615>
-
-
-
 
   /* USER CODE END TIM3_IRQn 0 */
   HAL_TIM_IRQHandler(&htim3);
