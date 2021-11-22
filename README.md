@@ -10,3 +10,6 @@ https://drive.google.com/file/d/1AHHO7Rlr-c7vhYcAtlscSO_YxnWxIut5/view?usp=shari
 
 Поcилання на відео з 4 лаб. роботи
 https://drive.google.com/file/d/1JkcL79A2umuBHRT8y8HFIV9jZn4xj1tb/view?usp=sharing
+
+Поcилання на відео з 5 лаб. роботи 
+https://drive.google.com/file/d/13lPbaxCwi2-TFoVcEdefd73_gMvIX4p9/view?usp=sharing
