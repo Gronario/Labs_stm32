@@ -44,6 +44,7 @@ ADC_HandleTypeDef hadc1;
 ADC_HandleTypeDef hadc2;
 ADC_HandleTypeDef hadc3;
 
+TIM_HandleTypeDef htim3;
 TIM_HandleTypeDef htim4;
 
 /* USER CODE BEGIN PV */
@@ -70,6 +71,7 @@ static void MX_ADC1_Init(void);
 static void MX_TIM4_Init(void);
 static void MX_ADC2_Init(void);
 static void MX_ADC3_Init(void);
+static void MX_TIM3_Init(void);
 /* USER CODE BEGIN PFP */
 
 /* USER CODE END PFP */
@@ -98,16 +100,16 @@ uint16_t ccr_calc_external_temp(uint16_t external_temp_value){          // pulse
 	return res;                                                     //res 0-100
 }
 
-void emergency_blink(uint16_t emergency_counter_potentiometr){
-	if (emergency_counter_potentiometr==1){
-		HAL_Delay(500);
-		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
-		HAL_Delay(500);
-	}
-	else if (emergency_counter_potentiometr==0){
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
-	}
-}
+//void emergency_blink(uint16_t emergency_counter_potentiometr){
+//	if (emergency_counter_potentiometr==1){
+//		HAL_Delay(500);
+//		HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+//		HAL_Delay(500);
+//	}
+//	else if (emergency_counter_potentiometr==0){
+//		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+//	}
+//}
 
 
 /* USER CODE END 0 */
@@ -143,11 +145,14 @@ int main(void)
   MX_TIM4_Init();
   MX_ADC2_Init();
   MX_ADC3_Init();
+  MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
 
   HAL_ADC_Start(&hadc1);          //ADC for internal temperature
   HAL_ADC_Start(&hadc2);         //ADC for external temperature
   HAL_ADC_Start(&hadc3);        //ADC for potentiometer
+
+  HAL_TIM_Base_Start_IT(&htim3);
 
   volatile HAL_StatusTypeDef adcPoolResult;
 
@@ -176,6 +181,15 @@ int main(void)
 	     // Avg_Slope = 0.0025    (info from data sheet page 138)
 	     // V_sense = ADC_power_voltage / 4096 * readValue_from_ADC   (ADC_power_voltage = ~3V can be measured by multimeter)
 
+
+		 if ((tCelsius_int>40) & (emergency_counter_internal_temp==0)){
+			 emergency_counter_internal_temp+=1;
+		 }
+		 else if ((tCelsius_int<40) & (emergency_counter_internal_temp==1)){
+			 emergency_counter_internal_temp=0;
+		 }
+
+
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);             //Orange LED is TIM_CHANNEL_2 (Blue LED is TIM_CHANNEL_4)
 		  TIM4->CCR2=ccr_calc_internal_temp(internal_temp);    // when temp=17, CCR=10, when temp=26, CCR=30, when temp=50, CCR=95
 
@@ -190,9 +204,13 @@ int main(void)
 
 		  tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
 
-//		 if (tCelsius_ext>40){
-//			 emergency_counter_potentiometr+=1;
-//		 }
+		 if ((tCelsius_ext>40) & (emergency_counter_external_temp==0)){
+			 emergency_counter_external_temp+=1;
+		 }
+		 else if ((tCelsius_ext<40) & (emergency_counter_external_temp==1)){
+			 emergency_counter_external_temp=0;
+		 }
+
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);      //Green LED is TIM_CHANNEL_1
 		  TIM4->CCR1=ccr_calc_potentiometr(external_temp_value);
 
@@ -209,15 +227,15 @@ int main(void)
 		 if ((potentiometr_value>3000) & (emergency_counter_potentiometr==0)){
 			 emergency_counter_potentiometr+=1;
 		 }
-		 else if ((potentiometr_value<3000) & (emergency_counter_potentiometr==1)){
-			 emergency_counter_potentiometr-=1;
+		 if ((potentiometr_value<3000) & (emergency_counter_potentiometr==1)){
+			 emergency_counter_potentiometr=0;
 		 }
 
 		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);      //Blue LED is TIM_CHANNEL_4
 		  TIM4->CCR4=ccr_calc_potentiometr(potentiometr_value);
 
 
-		  emergency_blink(emergency_counter_potentiometr);
+//		  emergency_blink(emergency_counter_potentiometr);
 
 
 
@@ -417,6 +435,51 @@ static void MX_ADC3_Init(void)
 }
 
 /**
+  * @brief TIM3 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_TIM3_Init(void)
+{
+
+  /* USER CODE BEGIN TIM3_Init 0 */
+
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  htim3.Instance = TIM3;
+  htim3.Init.Prescaler = 7999;
+  htim3.Init.CounterMode = TIM_COUNTERMODE_UP;
+  htim3.Init.Period = 499;
+  htim3.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  htim3.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_ENABLE;
+  if (HAL_TIM_Base_Init(&htim3) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim3, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+
+}
+
+/**
   * @brief TIM4 Initialization Function
   * @param None
   * @retval None
@@ -504,7 +567,7 @@ static void MX_GPIO_Init(void)
   /*Configure GPIO pin : PD14 */
   GPIO_InitStruct.Pin = GPIO_PIN_14;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Pull = GPIO_PULLDOWN;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
 

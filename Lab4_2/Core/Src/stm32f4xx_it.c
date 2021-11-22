@@ -56,7 +56,7 @@
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern TIM_HandleTypeDef htim3;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -198,6 +198,62 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f4xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles TIM3 global interrupt.
+  */
+void TIM3_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM3_IRQn 0 */
+	extern uint16_t emergency_counter_potentiometr;
+	extern uint16_t emergency_counter_internal_temp;
+	extern uint16_t emergency_counter_external_temp;
+
+	uint16_t arr[3]={emergency_counter_potentiometr,emergency_counter_internal_temp,emergency_counter_external_temp};
+
+	uint8_t emergency_counter =0;
+
+	void blink(uint16_t arr[3],uint8_t emergency_counter){
+
+		for (uint8_t i=0;i<3;i++){
+			if (arr[i]==1){
+				emergency_counter+=1;
+			}
+		}
+
+		switch (emergency_counter){
+
+			case 0:
+				HAL_GPIO_WritePin(GPIOD, GPIO_PIN_14, GPIO_PIN_RESET);
+				break;
+
+			case 1:
+				HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+				break;
+
+			case 2:
+				HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+				TIM3->ARR=199;
+				break;
+
+			case 3:
+				HAL_GPIO_TogglePin(GPIOD, GPIO_PIN_14);
+				TIM3->ARR=99;
+				break;
+			}
+	}
+
+	blink(arr,emergency_counter);
+
+
+
+
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim3);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
+
+  /* USER CODE END TIM3_IRQn 1 */
+}
 
 /* USER CODE BEGIN 1 */
 
