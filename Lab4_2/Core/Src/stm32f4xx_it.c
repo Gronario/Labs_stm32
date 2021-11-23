@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "stm32f4xx_it.h"
+#include <stdbool.h>
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 /* USER CODE END Includes */
@@ -43,9 +44,9 @@
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
 
-	extern uint16_t emergency_counter_potentiometr;
-	extern uint16_t emergency_counter_internal_temp;
-	extern uint16_t emergency_counter_external_temp;
+	extern bool emergency_counter_potentiometr;
+	extern bool emergency_counter_internal_temp;
+	extern bool emergency_counter_external_temp;
 
 /* USER CODE END PV */
 
@@ -57,7 +58,7 @@
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-	void blink(uint16_t emergency_counter_potentiometr,uint16_t emergency_counter_internal_temp,uint16_t emergency_counter_external_temp){
+	void blink(bool emergency_counter_potentiometr,bool emergency_counter_internal_temp,bool emergency_counter_external_temp){
 
 		uint8_t emergency_counter=emergency_counter_potentiometr+emergency_counter_internal_temp+emergency_counter_external_temp;
 

@@ -19,6 +19,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include <stdbool.h>
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -53,9 +54,9 @@ uint16_t potentiometr_value;            //adc value from potentiometr
 uint16_t internal_temp;                //adc value from internal temp sensor
 uint16_t external_temp_value;         //adc value from external temp sensor
 
-uint16_t emergency_counter_potentiometr=0;
-uint16_t emergency_counter_internal_temp=0;
-uint16_t emergency_counter_external_temp=0;
+bool emergency_counter_potentiometr=0;
+bool emergency_counter_internal_temp=0;
+bool emergency_counter_external_temp=0;
 
 float tCelsius_int;
 float tCelsius_ext;
@@ -79,7 +80,7 @@ static void MX_TIM3_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-void tCelsius_int_calc(uint16_t internal_temp,uint16_t *emergency_counter_internal_temp){
+void tCelsius_int_calc(uint16_t internal_temp,bool *emergency_counter_internal_temp){
 
 	tCelsius_int = ((3/4095.0 * internal_temp - 0.76) / 0.0025) +25.0;  //Temperature formula is C = ((V_sense - V25) / Avg_Slope) +25
 
@@ -96,7 +97,7 @@ void tCelsius_int_calc(uint16_t internal_temp,uint16_t *emergency_counter_intern
 	}
 }
 
-void tCelsius_ext_calc(uint16_t external_temp_value,uint16_t *emergency_counter_external_temp){
+void tCelsius_ext_calc(uint16_t external_temp_value,bool *emergency_counter_external_temp){
 
 	 tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
 
@@ -108,7 +109,7 @@ void tCelsius_ext_calc(uint16_t external_temp_value,uint16_t *emergency_counter_
 	 }
 }
 
-void potentiometer_calc(uint16_t *potentiometr_value,uint16_t *emergency_counter_potentiometr){
+void potentiometer_calc(uint16_t *potentiometr_value,bool *emergency_counter_potentiometr){
 
 	if ((*potentiometr_value>3000) & (*emergency_counter_potentiometr==0)){
 		 *emergency_counter_potentiometr+=1;
