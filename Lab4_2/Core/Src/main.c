@@ -227,7 +227,7 @@ int main(void)
 
 		  tCelsius_ext_calc(external_temp_value,&emergency_counter_external_temp);
 
-		  TIM4->CCR1=ccr_calc_potentiometr(external_temp_value);
+		  TIM4->CCR1=ccr_calc_external_temp(external_temp_value);
 
 
 		  //--------------------ADC for potentiometer------------------
