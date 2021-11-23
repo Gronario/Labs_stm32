@@ -22,7 +22,8 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>
+#include <stdio.h>     //needed library for sprintf
+#include <string.h>   //needed library for strlen
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -66,59 +67,48 @@ static void MX_TIM4_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+//HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+//HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10); - example
+
+
+void customUART(GPIO_TypeDef *GPIOx, uint16_t GPIO_Pin, UART_HandleTypeDef *huart, uint8_t *pData_led_on, uint8_t *pData_led_off)
+{
+	HAL_GPIO_TogglePin(GPIOx, GPIO_Pin);
+	if (HAL_GPIO_ReadPin(GPIOx, GPIO_Pin) == GPIO_PIN_SET)
+		HAL_UART_Transmit(huart, (uint8_t*) pData_led_on, strlen((char*) pData_led_on), 10);
+	else
+		HAL_UART_Transmit(huart, (uint8_t*) pData_led_off, strlen((char*) pData_led_off), 10);
+}
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 
 	  switch(GPIO_PIN){
 
 		  case But1_Pin:
-			  HAL_GPIO_TogglePin(Blue_LED_GPIO_Port,Blue_LED_Pin);
-
-			  if(HAL_GPIO_ReadPin(Blue_LED_GPIO_Port,Blue_LED_Pin) == GPIO_PIN_SET){
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue ON\r\n", 7+2,10);
-			  }
-			  else{
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue OFF\r\n", 8+2,10);
-			  }
-
+			  customUART(GPIOD,Blue_LED_Pin, &huart3, (uint8_t*) "Blue ON\r\n", (uint8_t*) "Blue OFF\r\n");
 			  break;
 
 		  case But2_Pin:
-			  HAL_GPIO_TogglePin(Orange_LED_GPIO_Port,Orange_LED_Pin);
-
-			  if(HAL_GPIO_ReadPin(Orange_LED_GPIO_Port,Orange_LED_Pin) == GPIO_PIN_SET){
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10);
-			  }
-			  else{
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange OFF\r\n", 10+2,10);
-			  }
+			  customUART(GPIOD,Orange_LED_Pin, &huart3, (uint8_t*) "Orange ON\r\n", (uint8_t*) "Orange OFF\r\n");
 			  break;
 
 		  case But3_Pin:
-			  HAL_GPIO_TogglePin(Red_LED_GPIO_Port,Red_LED_Pin);
-			  if(HAL_GPIO_ReadPin(Red_LED_GPIO_Port,Red_LED_Pin) == GPIO_PIN_SET){
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red ON\r\n", 6+2,10);
-			  }
-			  else{
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red OFF\r\n", 7+2,10);
-			  }
+			  customUART(GPIOD,Red_LED_Pin, &huart3, (uint8_t*) "Red ON\r\n", (uint8_t*) "Red OFF\r\n");
 			  break;
 
 		  case But4_Pin:
-			  HAL_GPIO_TogglePin(Green_LED_GPIO_Port,Green_LED_Pin);
-			  if(HAL_GPIO_ReadPin(Green_LED_GPIO_Port,Green_LED_Pin) == GPIO_PIN_SET){
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green ON\r\n", 8+2,10);
-			  }
-			  else{
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green OFF\r\n", 9+2,10);
-			  }
+			  customUART(GPIOD,Green_LED_Pin, &huart3, (uint8_t*) "Green ON\r\n", (uint8_t*) "Green OFF\r\n");
 			  break;
 
 		  default:
-			  HAL_UART_Transmit(&huart3, (uint8_t *)"UnexpCmd\r\n", 8+2,10);
+			  HAL_UART_Transmit(&huart3, (uint8_t *)"Unexpected_command\r\n", strlen("Unexpected_command\r\n"),10);
 			  break;
 	  }
 }
+
+//HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout)
+//HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10); - example
+
 
 
 /* USER CODE END 0 */
@@ -156,8 +146,9 @@ int main(void)
   MX_TIM4_Init();
   /* USER CODE BEGIN 2 */
 
-  HAL_TIM_Base_Start_IT(&htim4);
-  HAL_ADC_Start(&hadc2);         //ADC for external temperature
+  HAL_TIM_Base_Start_IT(&htim4);     //TIM4 is used to get temperature value once in 5 seconds through TIM4_IRQHandler()
+  HAL_ADC_Start(&hadc2);            //ADC for external temperature
+
   volatile HAL_StatusTypeDef adcPoolResultext;
 
   /* USER CODE END 2 */
@@ -180,47 +171,23 @@ int main(void)
 		  switch(rcvBuf[0]){
 
 			  case '1':
-				  HAL_GPIO_WritePin(Blue_LED_GPIO_Port,Blue_LED_Pin,GPIO_PIN_SET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue ON\r\n", 7+2,10);
+				  customUART(GPIOD,Blue_LED_Pin, &huart3, (uint8_t*) "Blue ON\r\n", (uint8_t*) "Blue OFF\r\n");
 				  break;
 
 			  case '2':
-				  HAL_GPIO_WritePin(Blue_LED_GPIO_Port,Blue_LED_Pin,GPIO_PIN_RESET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Blue OFF\r\n", 8+2,10);
+				  customUART(GPIOD,Orange_LED_Pin, &huart3, (uint8_t*) "Orange ON\r\n", (uint8_t*) "Orange OFF\r\n");
 				  break;
 
 			  case '3':
-				  HAL_GPIO_WritePin(Orange_LED_GPIO_Port,Orange_LED_Pin,GPIO_PIN_SET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10);
+				  customUART(GPIOD,Red_LED_Pin, &huart3, (uint8_t*) "Red ON\r\n", (uint8_t*) "Red OFF\r\n");
 				  break;
 
 			  case '4':
-				  HAL_GPIO_WritePin(Orange_LED_GPIO_Port,Orange_LED_Pin,GPIO_PIN_RESET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Orange OFF\r\n", 10+2,10);
-				  break;
-
-			  case '5':
-				  HAL_GPIO_WritePin(Red_LED_GPIO_Port,Red_LED_Pin,GPIO_PIN_SET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red ON\r\n", 6+2,10);
-				  break;
-
-			  case '6':
-				  HAL_GPIO_WritePin(Red_LED_GPIO_Port,Red_LED_Pin,GPIO_PIN_RESET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Red OFF\r\n", 7+2,10);
-				  break;
-
-			  case '7':
-				  HAL_GPIO_WritePin(Green_LED_GPIO_Port,Green_LED_Pin,GPIO_PIN_SET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green ON\r\n", 8+2,10);
-				  break;
-
-			  case '8':
-				  HAL_GPIO_WritePin(Green_LED_GPIO_Port,Green_LED_Pin,GPIO_PIN_RESET);
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"Green OFF\r\n", 9+2,10);
+				  customUART(GPIOD,Green_LED_Pin, &huart3, (uint8_t*) "Green ON\r\n", (uint8_t*) "Green OFF\r\n");
 				  break;
 
 			  default:
-				  HAL_UART_Transmit(&huart3, (uint8_t *)"UnexpCmd\r\n", 8+2,10);
+				  HAL_UART_Transmit(&huart3, (uint8_t *)"Unexpected_command\r\n", strlen("Unexpected_command\r\n"),10);
 				  break;
 		  }
 	  }

@@ -227,7 +227,7 @@ void TIM4_IRQHandler(void)
 	extern float tCelsius_ext;
 	extern UART_HandleTypeDef huart3;
 	uint8_t tx_buffer[]="Hello world\n\r";
-	HAL_UART_Transmit(&huart3, msg,sprintf((char *)msg,"\n\rExternal temperature is = %d",(uint8_t)tCelsius_ext),0XFFFF);
+	HAL_UART_Transmit(&huart3, msg,sprintf((char *)msg,"\n\rExternal temperature is %d",(uint8_t)tCelsius_ext),0XFFFF);
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
