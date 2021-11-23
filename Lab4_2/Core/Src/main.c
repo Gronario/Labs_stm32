@@ -79,6 +79,47 @@ static void MX_TIM3_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void tCelsius_int_calc(uint16_t internal_temp,uint16_t *emergency_counter_internal_temp){
+
+	tCelsius_int = ((3/4095.0 * internal_temp - 0.76) / 0.0025) +25.0;  //Temperature formula is C = ((V_sense - V25) / Avg_Slope) +25
+
+	// formula for temperature is located in reference manual page 413
+	// V25 = 0.76            (info from data sheet page 138)
+	// Avg_Slope = 0.0025    (info from data sheet page 138)
+	// V_sense = ADC_power_voltage / 4096 * readValue_from_ADC   (ADC_power_voltage = ~3V can be measured by multimeter)
+
+	if ((tCelsius_int>35) & (*emergency_counter_internal_temp==0)){
+		 *emergency_counter_internal_temp+=1;
+	}
+	else if ((tCelsius_int<35) & (*emergency_counter_internal_temp==1)){
+		 *emergency_counter_internal_temp=0;
+	}
+}
+
+void tCelsius_ext_calc(uint16_t external_temp_value,uint16_t *emergency_counter_external_temp){
+
+	 tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
+
+	 if ((tCelsius_ext>35) & (*emergency_counter_external_temp==0)){
+		 *emergency_counter_external_temp+=1;
+	 }
+	 else if ((tCelsius_ext<35) & (*emergency_counter_external_temp==1)){
+		 *emergency_counter_external_temp=0;
+	 }
+}
+
+void potentiometer_calc(uint16_t *potentiometr_value,uint16_t *emergency_counter_potentiometr){
+
+	if ((*potentiometr_value>3000) & (*emergency_counter_potentiometr==0)){
+		 *emergency_counter_potentiometr+=1;
+	}
+	else if ((*potentiometr_value<3000) & (*emergency_counter_potentiometr==1)){
+		 *emergency_counter_potentiometr=0;
+	}
+}
+
+
+
 uint16_t ccr_calc_potentiometr(uint16_t potentiometr_value){             // pulse calculation (pulse depends on ADC value)
 	uint16_t res = potentiometr_value * 0.024;                          //y=k*x (direct proportionality), k=4095/100=0.024, y=0.024*x
 	return res;                                                        //res 0-100
@@ -140,10 +181,13 @@ int main(void)
   HAL_ADC_Start(&hadc2);         //ADC for external temperature
   HAL_ADC_Start(&hadc3);        //ADC for potentiometer
 
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);         //Green LED
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);        //Orange LED
+  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);       //Blue LED
+
   HAL_TIM_Base_Start_IT(&htim3);
 
   volatile HAL_StatusTypeDef adcPoolResult;
-
   volatile HAL_StatusTypeDef adcPoolResultext;
 
 
@@ -156,30 +200,18 @@ int main(void)
 
 	     //--------------------ADC for internal temperature------------------
 
-	  	 HAL_ADC_PollForConversion(&hadc1,100);
-	     internal_temp = HAL_ADC_GetValue(&hadc1);
+	    adcPoolResult = HAL_ADC_PollForConversion(&hadc1,100);
 
-	     tCelsius_int = ((3/4095.0 * internal_temp - 0.76) / 0.0025) +25.0;  //Temperature formula is C = ((V_sense - V25) / Avg_Slope) +25
+	  	if(adcPoolResult == HAL_OK){
+		  internal_temp = HAL_ADC_GetValue(&hadc1);
+	     }
+	     else{
+		   Error_Handler();
+	     }
 
-//	     if (tCelsius_int>40){
-//	    	 emergency_counter_potentiometr+=1;
-//	     }
-	     // formula for temperature is located in reference manual page 413
-	     // V25 = 0.76            (info from data sheet page 138)
-	     // Avg_Slope = 0.0025    (info from data sheet page 138)
-	     // V_sense = ADC_power_voltage / 4096 * readValue_from_ADC   (ADC_power_voltage = ~3V can be measured by multimeter)
+	     tCelsius_int_calc(internal_temp,&emergency_counter_internal_temp);
 
-
-		 if ((tCelsius_int>40) & (emergency_counter_internal_temp==0)){
-			 emergency_counter_internal_temp+=1;
-		 }
-		 else if ((tCelsius_int<40) & (emergency_counter_internal_temp==1)){
-			 emergency_counter_internal_temp=0;
-		 }
-
-
-		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_2);             //Orange LED is TIM_CHANNEL_2 (Blue LED is TIM_CHANNEL_4)
-		  TIM4->CCR2=ccr_calc_internal_temp(internal_temp);    // when temp=17, CCR=10, when temp=26, CCR=30, when temp=50, CCR=95
+		 TIM4->CCR2=ccr_calc_internal_temp(internal_temp);    // when temp=17, CCR=10, when temp=26, CCR=30, when temp=50, CCR=95
 
 
 		  //--------------------ADC for external temperature------------------
@@ -189,19 +221,13 @@ int main(void)
 		  if(adcPoolResultext == HAL_OK){
 			  external_temp_value = HAL_ADC_GetValue(&hadc2);
 		  }
+		  else{
+			  Error_Handler();
+		  }
 
-		  tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
+		  tCelsius_ext_calc(external_temp_value,&emergency_counter_external_temp);
 
-		 if ((tCelsius_ext>40) & (emergency_counter_external_temp==0)){
-			 emergency_counter_external_temp+=1;
-		 }
-		 else if ((tCelsius_ext<40) & (emergency_counter_external_temp==1)){
-			 emergency_counter_external_temp=0;
-		 }
-
-		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_1);      //Green LED is TIM_CHANNEL_1
 		  TIM4->CCR1=ccr_calc_potentiometr(external_temp_value);
-
 
 
 		  //--------------------ADC for potentiometer------------------
@@ -211,15 +237,12 @@ int main(void)
 		  if(adcPoolResult == HAL_OK){
 			  potentiometr_value = HAL_ADC_GetValue(&hadc3);
 		  }
+		  else{
+			  Error_Handler();
+		  }
 
-		 if ((potentiometr_value>3000) & (emergency_counter_potentiometr==0)){
-			 emergency_counter_potentiometr+=1;
-		 }
-		 if ((potentiometr_value<3000) & (emergency_counter_potentiometr==1)){
-			 emergency_counter_potentiometr=0;
-		 }
+		  potentiometer_calc(&potentiometr_value,&emergency_counter_potentiometr);
 
-		  HAL_TIM_PWM_Start(&htim4, TIM_CHANNEL_4);      //Blue LED is TIM_CHANNEL_4
 		  TIM4->CCR4=ccr_calc_potentiometr(potentiometr_value);
 
 
