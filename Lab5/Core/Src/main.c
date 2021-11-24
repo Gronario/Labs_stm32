@@ -204,9 +204,6 @@ int main(void)
 		  Error_Handler();
 	  }
 
-	  tCelsius_ext_calc(external_temp_value);
-
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */

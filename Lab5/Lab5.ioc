@@ -7,6 +7,7 @@ ADC2.NbrOfConversionFlag=1
 ADC2.Rank-0\#ChannelRegularConversion=1
 ADC2.SamplingTime-0\#ChannelRegularConversion=ADC_SAMPLETIME_480CYCLES
 File.Version=6
+GPIO.groupedBy=Group By Peripherals
 KeepUserPlacement=false
 Mcu.Family=STM32F4
 Mcu.IP0=ADC2

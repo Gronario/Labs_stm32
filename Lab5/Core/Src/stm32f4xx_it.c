@@ -49,7 +49,9 @@
 
 	uint8_t msg[31];
 	extern float tCelsius_ext;
+	extern uint16_t external_temp_value;
 	extern UART_HandleTypeDef huart3;
+	extern void tCelsius_ext_calc(uint16_t external_temp_value);
 
 /* USER CODE END PV */
 
@@ -230,6 +232,7 @@ void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
 
+	tCelsius_ext_calc(external_temp_value);
 	HAL_UART_Transmit(&huart3, msg,sprintf((char *)msg,"External temperature is %d\n\r",(uint8_t)tCelsius_ext),0XFFFF);
 
   /* USER CODE END TIM4_IRQn 0 */
