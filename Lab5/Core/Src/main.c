@@ -22,8 +22,10 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>     //needed library for sprintf
-#include <string.h>   //needed library for strlen
+
+#include <stdio.h>               //needed library for sprintf
+#include <string.h>             //needed library for strlen
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,9 +44,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 ADC_HandleTypeDef hadc2;
-
 TIM_HandleTypeDef htim4;
-
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
@@ -66,6 +66,7 @@ static void MX_TIM4_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
 
 //HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout)
 //HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10); - example
@@ -106,8 +107,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_PIN){
 	  }
 }
 
-//HAL_StatusTypeDef HAL_UART_Transmit(UART_HandleTypeDef *huart, uint8_t *pData, uint16_t Size, uint32_t Timeout)
-//HAL_UART_Transmit(&huart3, (uint8_t *)"Orange ON\r\n", 9+2,10); - example
+void tCelsius_ext_calc(uint16_t external_temp_value){
+	tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0;   //convert value to temperature in the range from -24 to 100°C.
+}
 
 
 
@@ -156,19 +158,17 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-//  uint8_t msg[512];
-
   while (1)
   {
 
-	  uint8_t rcvBuf[1];
+	  uint8_t rcvBuf;
 	  HAL_StatusTypeDef result;
 
-	  result = HAL_UART_Receive(&huart3, rcvBuf, 1, 10);
+	  result = HAL_UART_Receive(&huart3, &rcvBuf, 1, 10);
 
 	  if (result == HAL_OK){
 
-		  switch(rcvBuf[0]){
+		  switch(rcvBuf){
 
 			  case '1':
 				  customUART(GPIOD,Blue_LED_Pin, &huart3, (uint8_t*) "Blue ON\r\n", (uint8_t*) "Blue OFF\r\n");
@@ -200,8 +200,12 @@ int main(void)
 	  if(adcPoolResultext == HAL_OK){
 		  external_temp_value = HAL_ADC_GetValue(&hadc2);
 	  }
+	  else{
+		  Error_Handler();
+	  }
 
-	  tCelsius_ext = (3/4095.0 * external_temp_value *-50) +100.0; //convert value to temperature in the range from -24 to 100°C.
+	  tCelsius_ext_calc(external_temp_value);
+
 
     /* USER CODE END WHILE */
 
@@ -360,7 +364,7 @@ static void MX_USART3_UART_Init(void)
 
   /* USER CODE END USART3_Init 1 */
   huart3.Instance = USART3;
-  huart3.Init.BaudRate = 9600;
+  huart3.Init.BaudRate = 115200;
   huart3.Init.WordLength = UART_WORDLENGTH_8B;
   huart3.Init.StopBits = UART_STOPBITS_1;
   huart3.Init.Parity = UART_PARITY_NONE;

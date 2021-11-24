@@ -23,6 +23,10 @@
 #include "stm32f4xx_it.h"
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
+
+#include <stdio.h>               //needed library for sprintf
+#include <string.h>             //needed library for strlen
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -42,6 +46,10 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
+
+	uint8_t msg[31];
+	extern float tCelsius_ext;
+	extern UART_HandleTypeDef huart3;
 
 /* USER CODE END PV */
 
@@ -221,13 +229,9 @@ void EXTI9_5_IRQHandler(void)
 void TIM4_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM4_IRQn 0 */
-//	HAL_GPIO_TogglePin(Red_LED_GPIO_Port, Red_LED_Pin);
 
-	uint8_t msg[512];
-	extern float tCelsius_ext;
-	extern UART_HandleTypeDef huart3;
-	uint8_t tx_buffer[]="Hello world\n\r";
-	HAL_UART_Transmit(&huart3, msg,sprintf((char *)msg,"\n\rExternal temperature is %d",(uint8_t)tCelsius_ext),0XFFFF);
+	HAL_UART_Transmit(&huart3, msg,sprintf((char *)msg,"External temperature is %d\n\r",(uint8_t)tCelsius_ext),0XFFFF);
+
   /* USER CODE END TIM4_IRQn 0 */
   HAL_TIM_IRQHandler(&htim4);
   /* USER CODE BEGIN TIM4_IRQn 1 */
