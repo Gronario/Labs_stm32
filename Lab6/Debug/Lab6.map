@@ -94,7 +94,7 @@ Discarded input sections
  .text          0x0000000000000000        0x0 ./Core/Src/main.o
  .data          0x0000000000000000        0x0 ./Core/Src/main.o
  .bss           0x0000000000000000        0x0 ./Core/Src/main.o
- .text.all_led_on
+ .text.all_led_off
                 0x0000000000000000       0x62 ./Core/Src/main.o
  .group         0x0000000000000000        0xc ./Core/Src/stm32f4xx_hal_msp.o
  .group         0x0000000000000000        0xc ./Core/Src/stm32f4xx_hal_msp.o
@@ -2590,9 +2590,9 @@ LOAD c:/st/stm32cubeide_1.7.0/stm32cubeide/plugins/com.st.stm32cube.ide.mcu.exte
                 0x00000000080004bc                __aeabi_idiv0
                 0x00000000080004bc                __aeabi_ldiv0
  *(.text*)
- .text.all_led_off
+ .text.all_led_on
                 0x00000000080004c0       0x62 ./Core/Src/main.o
-                0x00000000080004c0                all_led_off
+                0x00000000080004c0                all_led_on
  *fill*         0x0000000008000522        0x2 
  .text.main     0x0000000008000524       0x3c ./Core/Src/main.o
                 0x0000000008000524                main

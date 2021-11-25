@@ -210,8 +210,8 @@ int main(void)
 //  	  TxBuffer[0]++;
 //    }
 
-//    all_led_on(&hi2c1,TxBuffer);
-    all_led_off(&hi2c1,TxBuffer);
+    all_led_on(&hi2c1,TxBuffer);
+//    all_led_off(&hi2c1,TxBuffer);
 
 
 

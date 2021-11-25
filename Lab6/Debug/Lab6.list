@@ -353,21 +353,21 @@ Disassembly of section .text:
  80004bc:	4770      	bx	lr
  80004be:	bf00      	nop
 
-080004c0 <all_led_off>:
-/* USER CODE END PFP */
+080004c0 <all_led_on>:
+		  TxBuffer[0]++;
+	  }
+}
 
-/* Private user code ---------------------------------------------------------*/
-/* USER CODE BEGIN 0 */
 
-void all_led_off(I2C_HandleTypeDef *hi2c,uint8_t TxBuffer[]){
+void all_led_on(I2C_HandleTypeDef *hi2c,uint8_t TxBuffer[]){
  80004c0:	b580      	push	{r7, lr}
  80004c2:	b086      	sub	sp, #24
  80004c4:	af02      	add	r7, sp, #8
  80004c6:	6078      	str	r0, [r7, #4]
  80004c8:	6039      	str	r1, [r7, #0]
 
-	  uint8_t arr_led_off[4]={0x00,0x00,0x00,0x10}; //all led off
- 80004ca:	f04f 5380 	mov.w	r3, #268435456	; 0x10000000
+	  uint8_t arr_led_on[4]={0x00,0x10,0x00,0x00};//all led on
+ 80004ca:	f44f 5380 	mov.w	r3, #4096	; 0x1000
  80004ce:	60bb      	str	r3, [r7, #8]
 	  TxBuffer[0]=0xFA;
  80004d0:	683b      	ldr	r3, [r7, #0]
@@ -376,8 +376,8 @@ void all_led_off(I2C_HandleTypeDef *hi2c,uint8_t TxBuffer[]){
 	  for(uint8_t i=0;i<4;i++){
  80004d6:	2300      	movs	r3, #0
  80004d8:	73fb      	strb	r3, [r7, #15]
- 80004da:	e01a      	b.n	8000512 <all_led_off+0x52>
-		  TxBuffer[1]=arr_led_off[i];
+ 80004da:	e01a      	b.n	8000512 <all_led_on+0x52>
+		  TxBuffer[1]=arr_led_on[i];
  80004dc:	7bfa      	ldrb	r2, [r7, #15]
  80004de:	683b      	ldr	r3, [r7, #0]
  80004e0:	3301      	adds	r3, #1
@@ -406,7 +406,7 @@ void all_led_off(I2C_HandleTypeDef *hi2c,uint8_t TxBuffer[]){
  8000510:	73fb      	strb	r3, [r7, #15]
  8000512:	7bfb      	ldrb	r3, [r7, #15]
  8000514:	2b03      	cmp	r3, #3
- 8000516:	d9e1      	bls.n	80004dc <all_led_off+0x1c>
+ 8000516:	d9e1      	bls.n	80004dc <all_led_on+0x1c>
 	  }
 }
  8000518:	bf00      	nop
@@ -461,15 +461,15 @@ int main(void)
  8000540:	2180      	movs	r1, #128	; 0x80
  8000542:	4804      	ldr	r0, [pc, #16]	; (8000554 <main+0x30>)
  8000544:	f000 fcbe 	bl	8000ec4 <HAL_GPIO_WritePin>
+//  	  TxBuffer[1]=arr_led_oN[i];
 //  	  HAL_I2C_Master_Transmit(&hi2c1, SLAVE_ADDRESS, (uint8_t *)&TxBuffer, 2, WAITTIME);
 //  	  TxBuffer[0]++;
 //    }
 
-//    all_led_on(&hi2c1,TxBuffer);
-    all_led_off(&hi2c1,TxBuffer);
+    all_led_on(&hi2c1,TxBuffer);
  8000548:	4903      	ldr	r1, [pc, #12]	; (8000558 <main+0x34>)
  800054a:	4804      	ldr	r0, [pc, #16]	; (800055c <main+0x38>)
- 800054c:	f7ff ffb8 	bl	80004c0 <all_led_off>
+ 800054c:	f7ff ffb8 	bl	80004c0 <all_led_on>
 
 //	pcaEnableSleepMode(hi2c1);
 //	pcaSetDutyCycle(hi2c1,50);
