@@ -23,6 +23,11 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 
+#include <stdbool.h>
+#include "math.h"
+#define SLAVE_ADDRESS 0x80  //PCA9685 I2C bus address   0b10000000
+#define WAITTIME 1000
+
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -44,6 +49,15 @@ I2C_HandleTypeDef hi2c1;
 
 /* USER CODE BEGIN PV */
 
+uint8_t TxBuffer[2];
+
+//uint8_t arr_led_on[4]={0x00,0x10,0x00,0x00};//all led on
+//4096 to bin 0b00010000(ALL_LED_ON_H) 00000000(ALL_LED_ON_L)-{0x00,0x10} first two elements
+
+
+
+
+
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -56,6 +70,81 @@ static void MX_I2C1_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+
+void all_led_off(I2C_HandleTypeDef *hi2c,uint8_t TxBuffer[]){
+
+	  uint8_t arr_led_off[4]={0x00,0x00,0x00,0x10}; //all led off
+	  TxBuffer[0]=0xFA;
+	  for(uint8_t i=0;i<4;i++){
+		  TxBuffer[1]=arr_led_off[i];
+		  HAL_I2C_Master_Transmit(hi2c, SLAVE_ADDRESS, (uint8_t *)TxBuffer, 2, WAITTIME);
+		  TxBuffer[0]++;
+	  }
+}
+
+
+void all_led_on(I2C_HandleTypeDef *hi2c,uint8_t TxBuffer[]){
+
+	  uint8_t arr_led_on[4]={0x00,0x10,0x00,0x00};//all led on
+	  TxBuffer[0]=0xFA;
+	  for(uint8_t i=0;i<4;i++){
+		  TxBuffer[1]=arr_led_on[i];
+		  HAL_I2C_Master_Transmit(hi2c, SLAVE_ADDRESS, (uint8_t *)TxBuffer, 2, WAITTIME);
+		  TxBuffer[0]++;
+	  }
+}
+
+
+
+
+
+//bool pcaEnableSleepMode(I2C_HandleTypeDef hi2c)
+//{
+//	uint8_t register0;
+//	if (!readRegister(hi2c, 0x00, &register0))
+//	{
+//		return 0;
+//	}
+//
+//	register0 |= 0b00010000; // sleep bit
+//	return setRegister(hi2c, 0x00, register0);
+//}
+//
+//static bool readRegister(I2C_HandleTypeDef hi2c, uint8_t adress, uint8_t *save)
+//{
+//	HAL_I2C_Master_Transmit(&hi2c, ADRESS, (uint8_t *)&adress, 1, WAITTIME);
+//	uint8_t result = HAL_I2C_Master_Receive(&hi2c, ADRESS, (uint8_t *)save, 1, WAITTIME) == HAL_OK;
+//	return result;
+//}
+
+
+//bool pcaSetDutyCycle(I2C_HandleTypeDef hi2c, uint8_t newDutyCycle)
+//{
+//
+//		if (newDutyCycle <= 100 && newDutyCycle >= 0)
+//		{
+//			uint16_t setOn = newDutyCycle == 100 ? 4096 : 0;
+//			uint16_t setOff = newDutyCycle == 100 ? 0 : round(((float)newDutyCycle / 100) * 4096);
+//
+////			uint8_t finalChannel = 0xFA; //all leds
+//			uint8_t data4Elements[4] = {setOn, setOn >> 8u, setOff, setOff >> 8u};
+//			return setPin(data4Elements);
+//		}
+//
+//	return 0;
+//}
+//
+//
+//void setPin(uint8_t *data4Elements){
+//	  int8_t TxBuffer[2];
+//	  TxBuffer[0]=0xFA;
+//	  for(uint8_t i=0;i<4;i++){
+//		  TxBuffer[1]=data4Elements[i];
+//		  HAL_I2C_Master_Transmit(&hi2c1, ADRESS, (uint8_t *)&TxBuffer, 2, 1000);
+//		  TxBuffer[0]++;
+//	  } //PWM start
+//}
+
 
 /* USER CODE END 0 */
 
@@ -96,36 +185,61 @@ int main(void)
   /* USER CODE BEGIN WHILE */
 
   HAL_Delay(10);
-
   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, GPIO_PIN_RESET);   //turn on of the PB7 (output enable signal)
 
-  uint8_t devId =0x80;
-  uint8_t TxBuffer[8];
 
-  TxBuffer[0]=0x00; //MODE 0
-  TxBuffer[1]=0x01;
+//  all_led_off(&hi2c1,arr_led_off,TxBuffer);
 
-  HAL_I2C_Master_Transmit(&hi2c1, devId, (uint8_t*) &TxBuffer, 2, 1000);
+//  uint8_t arr_led_off[4]={0x00,0x00,0x00,0x10};
 
-  TxBuffer[0]=0x06; //LED_ON_L
-  TxBuffer[1]=0x65;
+//  TxBuffer[0]=0xFA;
+//  for(uint8_t i=0;i<4;i++){
+//	  TxBuffer[1]=arr_led_off[i];
+//	  HAL_I2C_Master_Transmit(&hi2c1, SLAVE_ADDRESS, (uint8_t *)&TxBuffer, 2, WAITTIME);
+//	  TxBuffer[0]++;
+//  }
 
-  HAL_I2C_Master_Transmit(&hi2c1, devId, (uint8_t*) &TxBuffer, 2, 1000);
 
-  TxBuffer[0]=0x07; //LED_ON_H
-  TxBuffer[1]=0x08;
 
-  HAL_I2C_Master_Transmit(&hi2c1, devId, (uint8_t*) &TxBuffer, 2, 1000);
+//    uint8_t arr_led_oN[4]={0x00,0x10,0x00,0x00};
+//
+//    TxBuffer[0]=0xFA;
+//    for(uint8_t i=0;i<4;i++){
+//  	  TxBuffer[1]=arr_led_oN[i];
+//  	  HAL_I2C_Master_Transmit(&hi2c1, SLAVE_ADDRESS, (uint8_t *)&TxBuffer, 2, WAITTIME);
+//  	  TxBuffer[0]++;
+//    }
 
-  TxBuffer[0]=0x08; //LED_OFF_L
-  TxBuffer[1]=0xCC;
+//    all_led_on(&hi2c1,TxBuffer);
+    all_led_off(&hi2c1,TxBuffer);
 
-  HAL_I2C_Master_Transmit(&hi2c1, devId, (uint8_t*) &TxBuffer, 2, 1000);
 
-  TxBuffer[0]=0x09; //LED_OFF_H
-  TxBuffer[1]=0x04;
 
-  HAL_I2C_Master_Transmit(&hi2c1, devId, (uint8_t*) &TxBuffer, 2, 1000);
+
+
+//  uint8_t data4Elements[4]={0x00,0x00,0x00,0x10}; //all led off
+//
+//  uint8_t data4Elements[4]={0xE8,0x3,0xD0,0x7}; //PWM signal
+
+//  1000 to bin 0b 00000011 11101000  for PWM
+//  2000 to bin 0b 00000111 11010000
+//
+//  uint8_t prescale_value=0x1E;  //200Hz
+//
+//
+//
+//
+//PWM start
+//
+//  TxBuffer[0]=0xFE;
+//	TxBuffer[1]=prescale_value;
+//	HAL_I2C_Master_Transmit(&hi2c1, devId, (uint8_t *)&TxBuffer, 2, 1000);
+//frequency change (to change frequency we need some PWM)
+
+
+//	pcaEnableSleepMode(hi2c1);
+//	pcaSetDutyCycle(hi2c1,50);
+
 
   while (1)
   {
