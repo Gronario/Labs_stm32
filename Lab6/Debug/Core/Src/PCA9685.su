@@ -1,0 +1,9 @@
+PCA9685.c:23:6:arr_filler_and_transmit	40	static
+PCA9685.c:33:6:all_led_off	24	static
+PCA9685.c:40:6:all_led_on	24	static
+PCA9685.c:50:6:pwm_on	24	static
+PCA9685.c:60:6:change_duty_cycle	40	static
+PCA9685.c:68:6:bit_filler_and_transmit	40	static
+PCA9685.c:76:6:sleep_mode	24	static
+PCA9685.c:90:10:Round_Int_To	16	static
+PCA9685.c:100:6:PCA9685_Frequency_Set	112	static
