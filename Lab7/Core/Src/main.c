@@ -48,9 +48,6 @@ UART_HandleTypeDef huart3;
 /* USER CODE BEGIN PV */
 uint8_t counter_for_menu=1;
 uint8_t msg[512];
-uint8_t TransmitArray[100]={0};
-char ReceiveArray[10000]={0};
-uint32_t adress=0;
 
 /* USER CODE END PV */
 
@@ -65,35 +62,6 @@ static void MX_USART3_UART_Init(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-
-void flash_read(){
-	for(uint8_t i=0;i<20;i++){
-		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);  //CS = HIGH (CS is high means bus isn`t working)
-		HAL_Delay(100);
-
-		TransmitArray[0]=0x03;                 //Prepare READ-ID command
-		TransmitArray[1]=adress>>16;
-		TransmitArray[2]=adress>>8;
-		TransmitArray[3]=adress;
-
-		if(adress==77824){
-			  break;
-		}
-		else{
-			  adress+=4096;
-		}
-
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);  //CS = LOW  (CS is high means bus isn`t working, when CS is low transmit starts)
-		HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);  //Exchange data
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);  //CS = HIGH
-		HAL_Delay(100);
-	}
-
-}
-
-
-
-
 
 //static void readText(void)
 //{
@@ -164,12 +132,31 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
+  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);  //CS = HIGH (CS is high means bus isn`t working)
+  HAL_Delay(100);
 
-
+  uint8_t TransmitArray[100]={0};
+  char ReceiveArray[100]={0};
+  uint32_t adress=0;
+  TransmitArray[0]=0x03;                 //Prepare READ-ID command
 
   while (1)
   {
+	  TransmitArray[1]=adress>>16;
+	  TransmitArray[2]=adress>>8;
+	  TransmitArray[3]=adress;
 
+	  if(adress==77824){
+		  break;
+	  }
+	  else{
+		  adress+=4096;
+	  }
+
+	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);  //CS = LOW  (CS is high means bus isn`t working, when CS is low transmit starts)
+	  HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);  //Exchange data
+	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);  //CS = HIGH
+	  HAL_Delay(100);
 
 
 //-------------------------------- UART -------------------------------------------
@@ -189,8 +176,7 @@ int main(void)
   		  switch(rcvBuf){
 
   			  case '0':
-  				  flash_read();
-//  				  HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);
+  				  HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);
   				  HAL_UART_Transmit(&huart3,(uint8_t *) ReceiveArray,sizeof ReceiveArray/sizeof ReceiveArray[0],0XFFFF);
   			  break;
 
