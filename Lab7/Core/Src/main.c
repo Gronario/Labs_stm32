@@ -48,6 +48,9 @@ UART_HandleTypeDef huart3;
 /* USER CODE BEGIN PV */
 uint8_t counter_for_menu=1;
 uint8_t msg[512];
+uint8_t TransmitArray[100]={0};
+
+uint32_t adress=0;
 
 /* USER CODE END PV */
 
@@ -63,35 +66,40 @@ static void MX_USART3_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
-//static void readText(void)
-//{
-//	uint32_t  addr = MIN_ADDR;
-//	char tmpRdStr[STR_LEN];
-//
-//  	for (uint8_t i = 0; i < STR_NUM || addr > MAX_ADDR; i++, addr += SEC_INC)
-//  	{
-//  		SST25RdBuffer(addr, (uint8_t *) tmpRdStr, STR_LEN);
-//  		transmitUartMessage(tmpRdStr);
-//  	}
-//}
-//
-//static void SST25RdBuffer(uint32_t addr, uint8_t *buf, uint32_t nByte)
-//{
-//	if (addr + nByte > MAX_ADDR)
-//		return;
-//
-//	uint8_t tmpBuf[nByte];
-//	uint8_t trnsmtRdBuf[] = { HREAD, ((addr  & 0xFF0000) >> 16), ((addr  & 0xFF00) >> 8), addr & 0xFF, D_BYTE };
-//
-//	SST25CSToggle(CS_ON);
-//	HAL_SPI_Transmit(&hspi1, trnsmtRdBuf, sizeof(trnsmtRdBuf), 100);
-//	HAL_SPI_Receive(&hspi1, tmpBuf, sizeof(tmpBuf) , 100 );
-//	for (uint8_t i = 1; i < nByte; i++)
-//		buf[i] = 0;
-//	for ( uint32_t i = 1; tmpBuf[i] != 0xFF; i++ )
-//		buf[i] = tmpBuf[i];
-//	SST25CSToggle(CS_OFF);
-//}
+void flash_read(){
+	char ReceiveArray[100]={0};
+
+	for(uint8_t i=0;i<20;i++){
+		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);  //CS = HIGH (CS is high means bus isn`t working)
+		HAL_Delay(10);
+
+		TransmitArray[0]=0x03;                 //Prepare READ-ID command
+		TransmitArray[1]=adress>>16;
+		TransmitArray[2]=adress>>8;
+		TransmitArray[3]=adress;
+
+		if(adress==77824){
+			  break;
+		}
+		else{
+			  adress+=4096;
+		}
+
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);  //CS = LOW  (CS is high means bus isn`t working, when CS is low transmit starts)
+		HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);  //Exchange data
+		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);  //CS = HIGH
+		HAL_Delay(10);
+	    HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);
+
+	    for(uint8_t j=0;j<100;j++){
+	    	if(ReceiveArray[j]==255){
+	    		ReceiveArray[j]='\0';
+	    	}
+	    }
+	    HAL_UART_Transmit(&huart3,(uint8_t *) ReceiveArray,sizeof ReceiveArray/sizeof ReceiveArray[0],0XFFFF);
+	}
+}
+
 
 /* USER CODE END 0 */
 
@@ -132,34 +140,8 @@ int main(void)
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
 
-  HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);  //CS = HIGH (CS is high means bus isn`t working)
-  HAL_Delay(100);
-
-  uint8_t TransmitArray[100]={0};
-  char ReceiveArray[100]={0};
-  uint32_t adress=0;
-  TransmitArray[0]=0x03;                 //Prepare READ-ID command
-
   while (1)
   {
-	  TransmitArray[1]=adress>>16;
-	  TransmitArray[2]=adress>>8;
-	  TransmitArray[3]=adress;
-
-	  if(adress==77824){
-		  break;
-	  }
-	  else{
-		  adress+=4096;
-	  }
-
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);  //CS = LOW  (CS is high means bus isn`t working, when CS is low transmit starts)
-	  HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);  //Exchange data
-	  HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);  //CS = HIGH
-	  HAL_Delay(100);
-
-
-//-------------------------------- UART -------------------------------------------
 
    	  uint8_t rcvBuf;
   	  HAL_StatusTypeDef result;
@@ -176,8 +158,7 @@ int main(void)
   		  switch(rcvBuf){
 
   			  case '0':
-  				  HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);
-  				  HAL_UART_Transmit(&huart3,(uint8_t *) ReceiveArray,sizeof ReceiveArray/sizeof ReceiveArray[0],0XFFFF);
+  				  flash_read();
   			  break;
 
   			  default:
