@@ -42,15 +42,14 @@
 
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
-
 UART_HandleTypeDef huart3;
 
 /* USER CODE BEGIN PV */
 uint8_t counter_for_menu=1;
 uint8_t msg[512];
 uint8_t TransmitArray[100]={0};
-
-uint32_t adress=0;
+char ReceiveArray[100]={0};
+uint32_t address=0;
 
 /* USER CODE END PV */
 
@@ -67,31 +66,30 @@ static void MX_USART3_UART_Init(void);
 /* USER CODE BEGIN 0 */
 
 void flash_read(){
-	char ReceiveArray[100]={0};
 
 	for(uint8_t i=0;i<20;i++){
 		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);  //CS = HIGH (CS is high means bus isn`t working)
 		HAL_Delay(10);
 
 		TransmitArray[0]=0x03;                 //Prepare READ-ID command
-		TransmitArray[1]=adress>>16;
-		TransmitArray[2]=adress>>8;
-		TransmitArray[3]=adress;
+		TransmitArray[1]=address>>16;         //You should make these wierd adress shifts
+		TransmitArray[2]=address>>8;
+		TransmitArray[3]=address;
 
-		if(adress==77824){
+		if(address==77824){   //0+4096*19=77824 - address of line 20
 			  break;
 		}
 		else{
-			  adress+=4096;
+			  address+=4096;
 		}
 
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);  //CS = LOW  (CS is high means bus isn`t working, when CS is low transmit starts)
 		HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);  //Exchange data
 		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);  //CS = HIGH
 		HAL_Delay(10);
-	    HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);
+	    HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);  //send newline
 
-	    for(uint8_t j=0;j<100;j++){
+	    for(uint8_t j=0;j<100;j++){       //filter off all the 0xFF
 	    	if(ReceiveArray[j]==255){
 	    		ReceiveArray[j]='\0';
 	    	}
@@ -166,6 +164,9 @@ int main(void)
   				  break;
   		  }
   	  }
+//	  	  else{
+//	  		  Error_Handler();
+//	  	  }
 
     /* USER CODE END WHILE */
 
