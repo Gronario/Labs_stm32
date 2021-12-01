@@ -70,7 +70,6 @@ const uint8_t writeStatusCode = 0x01;
 const uint8_t enableSOCode = 0x70;
 const uint8_t disableSOCode = 0x80;
 const uint8_t autoAddressIncrementCode = 0xAD;
-const uint16_t chipEnablePin = GPIO_PIN_7;
 
 /* USER CODE END PV */
 
@@ -86,10 +85,20 @@ static void MX_USART3_UART_Init(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 
+void CS_change(){
+	if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7)==GPIO_PIN_SET){
+		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_RESET);
+	}
+	else{
+		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);
+	}
+}
+
 void flash_read(){
 
 	for(uint8_t i=0;i<20;i++){
 		HAL_GPIO_WritePin(GPIOD,GPIO_PIN_7,GPIO_PIN_SET);  //CS = HIGH (CS is high means bus isn`t working)
+
 		HAL_Delay(10);
 
 		TransmitArray[0]=0x03;                 //Prepare READ-ID command
@@ -98,17 +107,18 @@ void flash_read(){
 		TransmitArray[3]=address;
 
 		if(address==77824){   //0+4096*19=77824 - address of line 20
-			  break;
+			address=0;
 		}
 		else{
 			  address+=4096;
 		}
 
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);  //CS = LOW  (CS is high means bus isn`t working, when CS is low transmit starts)
-		HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);  //Exchange data
-		HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);  //CS = HIGH
+		CS_change(); //When CS is low transmit starts
+		HAL_SPI_TransmitReceive(&hspi1,TransmitArray,(uint8_t *)ReceiveArray,100,1000);    //Exchange data
+
+		CS_change();  //CS = HIGH
 		HAL_Delay(10);
-	    HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);  //send newline
+	    HAL_UART_Transmit(&huart3, (uint8_t *)"\r\n", strlen("\r\n"),10);               //send newline
 
 	    for(uint8_t j=0;j<100;j++){       //filter off all the 0xFF
 	    	if(ReceiveArray[j]==255){
@@ -119,67 +129,69 @@ void flash_read(){
 	}
 }
 
-void setTransaction(bool state){
+void pin_control(bool state){
 	if (state == true)
 	{
-		if (HAL_GPIO_ReadPin(GPIOD, chipEnablePin) == GPIO_PIN_SET)
-			HAL_GPIO_WritePin(GPIOD, chipEnablePin, GPIO_PIN_RESET);
+		if (HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7) == GPIO_PIN_SET)
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_RESET);
 	}
 	else
 	{
-		if (HAL_GPIO_ReadPin(GPIOD, chipEnablePin) == GPIO_PIN_RESET)
-			HAL_GPIO_WritePin(GPIOD, chipEnablePin, GPIO_PIN_SET);
+		if (HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_7) == GPIO_PIN_RESET)
+			HAL_GPIO_WritePin(GPIOD, GPIO_PIN_7, GPIO_PIN_SET);
 	}
 }
 
 void setWriteStatus(){
 	uint8_t status[] = {writeStatusCode, 0};
-	setTransaction(true);
+
+	pin_control(true);
 	HAL_SPI_Transmit(&hspi1, (uint8_t *)&enableWriteStatusCode, 1, waitTime);
-	setTransaction(false);
-	setTransaction(true);
+	pin_control(false);
+
+	pin_control(true);
 	HAL_SPI_Transmit(&hspi1, status, 2, waitTime);
-	setTransaction(false);
+	pin_control(false);
 }
 
 void setHEOW(bool state){
-	setTransaction(true);
+	pin_control(true);
 	HAL_SPI_Transmit(&hspi1, state == true ? (uint8_t *)&enableSOCode : (uint8_t *)&disableSOCode, 1, waitTime);
-	setTransaction(false);
+	pin_control(false);
 }
 
 void waitForEndOfWriting(){
-	setTransaction(true);
+	pin_control(true);
 
 	while (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_4) == GPIO_PIN_RESET);
 
-	setTransaction(false);
+	pin_control(false);
 }
 
 void setWriteMode(bool state){
-	setTransaction(true);
+	pin_control(true);
 	HAL_SPI_Transmit(&hspi1, state == true ? (uint8_t *)&writeEnableCode : (uint8_t *)&writeDisableCode, 1, waitTime);
-	setTransaction(false);
+	pin_control(false);
 }
 
 void flash_clear(){
 	    setWriteMode(true);
-		setTransaction(true);
+		pin_control(true);
 		HAL_SPI_Transmit(&hspi1, (uint8_t *)&eraseAllCode, 1, waitTime);
-		setTransaction(false);
+		pin_control(false);
 	    setWriteMode(false);
 	    HAL_Delay(100);
 }
 
-void writeLineSPI(uint32_t memory, uint8_t *line, uint8_t lineLength){
+void flash_write(uint32_t memory, uint8_t *line, uint8_t lineLength){
 	setWriteStatus();
 	setWriteMode(true);
 	setHEOW(true);
 
 	uint8_t startWritingPoint[] = {autoAddressIncrementCode, memory >> 16, memory >> 8, memory, line[0], line[1]};
-	setTransaction(true);
+	pin_control(true);
 	HAL_SPI_Transmit(&hspi1, startWritingPoint, sizeof(startWritingPoint), waitTime);
-	setTransaction(false);
+	pin_control(false);
 	waitForEndOfWriting();
 
 	uint8_t twoBytesToPass[] = {autoAddressIncrementCode, line[0], line[1]};
@@ -189,9 +201,9 @@ void writeLineSPI(uint32_t memory, uint8_t *line, uint8_t lineLength){
 			twoBytesToPass[2] = line[i + 1];
 		else
 			twoBytesToPass[2] = 255;
-		setTransaction(true);
+		pin_control(true);
 		HAL_SPI_Transmit(&hspi1, twoBytesToPass, sizeof(twoBytesToPass), waitTime);
-		setTransaction(false);
+		pin_control(false);
 
 		waitForEndOfWriting();
 	}
@@ -200,7 +212,7 @@ void writeLineSPI(uint32_t memory, uint8_t *line, uint8_t lineLength){
 	setHEOW(false);
 }
 
-void flash_write(){
+void flash_write_text(){
 
 	strcat(timeCapsule[0], "From: Hrona Yurii, yura.grona.011i@gmail.com\r\n");
 	strcat(timeCapsule[1], "Mentor: Vitalii Kostiuk, vitalii.kostiuk@globallogic.com\r\n");
@@ -218,18 +230,10 @@ void flash_write(){
 
 	memory = 0;
 	for (int i = 0; i < maxLines; i++){
-		  writeLineSPI(memory, (uint8_t *)timeCapsule[i], strlen(timeCapsule[i]));
+		  flash_write(memory, (uint8_t *)timeCapsule[i], strlen(timeCapsule[i]));
 		  memory += 4096;
 	}
 }
-
-
-
-
-
-
-
-
 
 /* USER CODE END 0 */
 
@@ -292,7 +296,7 @@ int main(void)
   			  break;
 
   			  case '2':
-  				 flash_write();
+  				 flash_write_text();
 				 HAL_UART_Transmit(&huart3, (uint8_t *)"Write info in Flash compeleted\r\n", strlen("Write info in Flash compeleted\r\n"),10);
 			  break;
 
