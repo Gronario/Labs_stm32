@@ -22,7 +22,6 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include <stdio.h>     //needed library for sprintf
 #include <string.h>   //needed library for strlen
 #include <stdbool.h>
 #include <string.h>
@@ -49,10 +48,9 @@
 /* Private variables ---------------------------------------------------------*/
 SPI_HandleTypeDef hspi1;
 UART_HandleTypeDef huart3;
-
 /* USER CODE BEGIN PV */
 
-//uint8_t msg[512];
+
 uint8_t counter_for_menu=1;
 uint8_t TransmitArray[100]={0};
 char ReceiveArray[100]={0};
@@ -101,7 +99,7 @@ void flash_read(){
 
 		HAL_Delay(10);
 
-		TransmitArray[0]=0x03;                 //Prepare READ-ID command
+		TransmitArray[0]=readMemoryCode;                 //Prepare READ-ID command
 		TransmitArray[1]=address>>16;         //You should make these wierd adress shifts
 		TransmitArray[2]=address>>8;
 		TransmitArray[3]=address;
@@ -380,7 +378,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;

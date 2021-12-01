@@ -37,15 +37,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING, OCTETS
  16 .debug_ranges 000007c8  00000000  00000000  0002c248  2**3
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 17 .debug_macro  000202bc  00000000  00000000  0002ca10  2**0
+ 17 .debug_macro  0001fe56  00000000  00000000  0002ca10  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 18 .debug_line   00009751  00000000  00000000  0004cccc  2**0
+ 18 .debug_line   0000969e  00000000  00000000  0004c866  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 19 .debug_str    000c43aa  00000000  00000000  0005641d  2**0
+ 19 .debug_str    000c3477  00000000  00000000  00055f04  2**0
                   CONTENTS, READONLY, DEBUGGING, OCTETS
- 20 .comment      00000053  00000000  00000000  0011a7c7  2**0
+ 20 .comment      00000053  00000000  00000000  0011937b  2**0
                   CONTENTS, READONLY
- 21 .debug_frame  00002188  00000000  00000000  0011a81c  2**2
+ 21 .debug_frame  00002188  00000000  00000000  001193d0  2**2
                   CONTENTS, READONLY, DEBUGGING, OCTETS
 
 Disassembly of section .text:
@@ -420,9 +420,9 @@ void flash_read(){
  8000516:	200a      	movs	r0, #10
  8000518:	f000 fe60 	bl	80011dc <HAL_Delay>
 
-		TransmitArray[0]=0x03;                 //Prepare READ-ID command
- 800051c:	4b2f      	ldr	r3, [pc, #188]	; (80005dc <flash_read+0xdc>)
- 800051e:	2203      	movs	r2, #3
+		TransmitArray[0]=readMemoryCode;                 //Prepare READ-ID command
+ 800051c:	2203      	movs	r2, #3
+ 800051e:	4b2f      	ldr	r3, [pc, #188]	; (80005dc <flash_read+0xdc>)
  8000520:	701a      	strb	r2, [r3, #0]
 		TransmitArray[1]=address>>16;         //You should make these wierd adress shifts
  8000522:	4b2f      	ldr	r3, [pc, #188]	; (80005e0 <flash_read+0xe0>)
@@ -1581,9 +1581,9 @@ static void MX_SPI1_Init(void)
  8000d3a:	4b0e      	ldr	r3, [pc, #56]	; (8000d74 <MX_SPI1_Init+0x64>)
  8000d3c:	f44f 7200 	mov.w	r2, #512	; 0x200
  8000d40:	619a      	str	r2, [r3, #24]
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_128;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_32;
  8000d42:	4b0c      	ldr	r3, [pc, #48]	; (8000d74 <MX_SPI1_Init+0x64>)
- 8000d44:	2230      	movs	r2, #48	; 0x30
+ 8000d44:	2220      	movs	r2, #32
  8000d46:	61da      	str	r2, [r3, #28]
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
  8000d48:	4b0a      	ldr	r3, [pc, #40]	; (8000d74 <MX_SPI1_Init+0x64>)
