@@ -19,3 +19,6 @@ https://drive.google.com/file/d/13lPbaxCwi2-TFoVcEdefd73_gMvIX4p9/view?usp=shari
 
 Поcилання на відео з 6 лаб. роботи 
 https://drive.google.com/file/d/1vqNg0rE6sBjogpjsxQDTQpkOE6PLFG9j/view?usp=sharing
+
+Поcилання на відео з 7 лаб. роботи 
+https://drive.google.com/file/d/18ZnLFL4RAThRmOeOh0OcW85rPb_3EtwY/view?usp=sharing
