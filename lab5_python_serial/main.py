@@ -2,10 +2,11 @@ import serial
 
 serialcom = serial.Serial('COM8', 115200)
 print("Menu:\n"
-      "press 0 to toggle Blue LED\n"
-      "press 1 to toggle Orange LED\n"
-      "press 2 to toggle Red LED\n"
-      "press 3 to toggle Green LED\n")
+      "press 1 to toggle Blue LED\n"
+      "press 2 to toggle Orange LED\n"
+      "press 3 to toggle Red LED\n"
+      "press 4 to toggle Green LED\n"
+      "press 0 to quit\n")
 while True:
     packet = serialcom.readline()
     print(packet.decode('utf'))
@@ -20,5 +21,8 @@ while True:
         serialcom.write(i.encode())
     elif i == '4':
         serialcom.write(i.encode())
+    elif i == '0':
+        print("Quit successful")
+        break
     else:
         print("Unexpected command")
