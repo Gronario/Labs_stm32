@@ -3,6 +3,7 @@ import tkinter as tk
 from threading import Timer
 import serial
 
+
 # -------------PV----------------
 font_tuple=("Arial",12)
 button_height=0.25

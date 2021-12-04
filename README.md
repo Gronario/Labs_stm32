@@ -22,3 +22,6 @@ https://drive.google.com/file/d/1vqNg0rE6sBjogpjsxQDTQpkOE6PLFG9j/view?usp=shari
 
 Поcилання на відео з 7 лаб. роботи 
 https://drive.google.com/file/d/18ZnLFL4RAThRmOeOh0OcW85rPb_3EtwY/view?usp=sharing
+
+Додаткове завдання для 5 лабораторної роботи (pyserial)
+https://drive.google.com/file/d/1NQ6GMnF67AUkOcGQfqWfRpdwH3_yUTHO/view?usp=sharing
